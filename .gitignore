@@ -7,13 +7,19 @@
 
 .idea/
 _ReSharper.Caches/
-
+sql/
 
 Your-Games-List.rar
 Copy status.txt
 Code first scaffold script.txt
 YGL.API/appsettings.json
 YGL.API/Properties/launchSettings.json
+Twitch data.txt
+YGL.API/Services/CustomPasswordHasher.cs
+
+
+
+
 
 
 

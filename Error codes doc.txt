@@ -1,0 +1,56 @@
+validation
+    {main group 4} {type of error 2}{specific error 2}
+
+	type of error:
+		validation 30, (data validation errors)
+		not found 40, ( item not found)
+		already used 41, (item already exists, is used etc.)
+		auth 50, (not valid, expired etc.)
+		could not sent 51, (could not send and email)
+		other 80, (other which do not belong to other groups)
+
+	
+	main group:
+		jwt 11XX(1100);
+			refresh token 1101
+	
+		user 12XX(1200):
+			username 1201,
+			password 1202,
+			email 1203,
+			
+			about 1210,
+			country 1211,
+			gender 1212,
+			birth year 1213,
+			slug 1214,
+			
+			
+		emails 13XX(1300)
+			account confirmation 1301
+			password reset 1302
+			
+		password reset token 14XX(1400)
+		
+	
+		controllers 2XXX - 7XXX
+			general 2000
+			company 2010
+	
+	
+	additional info:
+	
+	validation:
+		does not match criteria 2
+		too short 3
+		too long 4
+
+	
+	auth:
+		not valid: 1
+		expired : 2
+		forbidden : 10
+		
+	
+
+	
