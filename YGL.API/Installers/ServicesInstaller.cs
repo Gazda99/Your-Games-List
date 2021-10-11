@@ -15,6 +15,9 @@ public class ServicesInstaller {
             new PasswordHasherInstaller(),
 
             new RedisCacheInstaller(),
+            
+            new HealthChecksInstaller(),
+            
             new EndpointServicesInstaller(),
         };
 

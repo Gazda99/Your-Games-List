@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using StackExchange.Redis;
 using YGL.API.Services;
 using YGL.API.Settings;
 
@@ -13,6 +14,9 @@ public class RedisCacheInstaller : IInstaller {
         if (!redisCacheSettings.Enabled)
             return;
 
+        services.AddSingleton<IConnectionMultiplexer>(_ =>
+            ConnectionMultiplexer.Connect(redisCacheSettings.ConnectionString));
+        
         services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
         services.AddSingleton<IRedisCacheService, RedisCacheService>();
     }
