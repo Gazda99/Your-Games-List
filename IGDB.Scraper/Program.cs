@@ -23,10 +23,10 @@ class Program {
     }
 
     private static async Task Scrape(YGL.Model.YGLDataContext dbConnection) {
-        // await Scrapers.ScrapCompanies(dbConnection);
-        // await Scrapers.ScrapGenres(dbConnection);
-        // await Scrapers.ScrapGameModes(dbConnection);
-        // await Scrapers.ScrapPlatforms(dbConnection);
+        await Scrapers.ScrapCompanies(dbConnection);
+        await Scrapers.ScrapGenres(dbConnection);
+        await Scrapers.ScrapGameModes(dbConnection);
+        await Scrapers.ScrapPlatforms(dbConnection);
         await Scrapers.ScrapPlayerPerspectives(dbConnection);
     }
 }
