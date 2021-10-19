@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Net.Http;
@@ -16,8 +17,15 @@ public class Scraper {
 
     public async Task<List<T>> Scrape<T>(string rawContent, int limit) {
         List<T> itemList = new List<T>();
+        string type = typeof(T).FullName;
 
         int offset = 0;
+        int currentCount = 0;
+
+        Console.WriteLine("************************************************");
+        Console.WriteLine($"Starting to deserializing {type} at {GetTime()}");
+        Stopwatch sw = new Stopwatch();
+        sw.Start();
 
         while (true) {
             SimpleHttpRequestMsg req = SimpleHttpRequestMsg
@@ -26,11 +34,11 @@ public class Scraper {
                 .Content(ContentBuilder(rawContent, limit, offset));
 
             //get response
-            var res = await _httpClient.SendAsync(req);
-            var stringRes = await res.Content.ReadAsStringAsync();
+            HttpResponseMessage res = await _httpClient.SendAsync(req);
+            string stringRes = await res.Content.ReadAsStringAsync();
 
 
-            Console.WriteLine($"Deserializing {typeof(T).FullName} {offset} - {offset + limit} ");
+            Console.WriteLine($"Deserializing {type} {offset} - {offset + limit} ");
 
             //deserialize response
             List<T> deserializeObject =
@@ -42,6 +50,8 @@ public class Scraper {
             else {
                 Console.WriteLine($"Deserialized item count: {deserializeObject.Count}");
                 itemList.AddRange(deserializeObject);
+                currentCount += deserializeObject.Count;
+                Console.WriteLine($"Current count of deserialized items: {currentCount}");
             }
 
             offset += limit;
@@ -52,23 +62,27 @@ public class Scraper {
             Console.WriteLine($"Response length: {contentLength}");
 
             //check if response is not null
-
-            if (contentLength <= 2) {
-                Console.WriteLine($"Finished before {offset}");
+            if (contentLength <= 5) {
+                Console.WriteLine($"Finished before {offset} item");
                 break;
             }
 
 
-            Console.WriteLine(
-                $"Deserialized successfully at: {DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)}");
-            Console.WriteLine();
+            Console.WriteLine($"Deserialized successfully at: {GetTime()}");
+            Console.WriteLine("-----------------");
 
             Thread.Sleep(SleepTime);
         }
 
+        Console.WriteLine($"Finished adding/updating {currentCount} items at: {GetTime()}");
+        Console.WriteLine($"Operation took {sw.Elapsed.ToString()}");
+        Console.WriteLine("************************************************");
         return itemList;
     }
 
+    private static string GetTime() {
+        return DateTime.Now.ToString("hh:mm:ss:ffff");
+    }
 
     private static string ContentBuilder(string rawContent, int limit, int offset) {
         return $"{rawContent} limit {limit}; offset {offset};";
