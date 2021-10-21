@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using YGL.Model;
+using System.Linq;
 
-namespace YGL.API.Domain.SafeObjects {
+namespace YGL.API.SafeObjects {
 public class SafeUser {
     public long Id { get; set; }
     public string Username { get; set; }
@@ -14,8 +14,11 @@ public class SafeUser {
     public short Rank { get; set; }
     public int Experience { get; set; }
 
-    public IEnumerable<ListOfGame> ListOfGames { get; set; }
-    public IEnumerable<Group> Groups { get; set; }
+    public bool ItemStatus { get; set; }
+
+    public IEnumerable<long> ListOfGames { get; set; }
+    public IEnumerable<long> Groups { get; set; }
+    public IEnumerable<long> Friends { get; set; }
 
 
     public SafeUser(YGL.Model.User user) {
@@ -28,8 +31,14 @@ public class SafeUser {
         this.About = user.About;
         this.Rank = user.Rank;
         this.Experience = user.Experience;
-        this.ListOfGames = user.ListOfGames;
-        this.Groups = user.Groups;
+        this.ItemStatus = (bool)user.ItemStatus;
+
+        this.ListOfGames = user.ListOfGames.Select(l => l.Id);
+        this.Groups = user.Groups.Select(l => l.Id);
+        
+        this.Friends = user.FriendFriendOnes
+            .Concat(user.FriendFriendTwos)
+            .Select(friend => friend.FriendOneId != this.Id ? friend.FriendOneId : friend.FriendTwoId);
     }
 }
 }

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Net;
-using YGL.API.Domain.SafeObjects;
 using YGL.API.Errors;
+using YGL.API.SafeObjects;
 
 namespace YGL.API.Domain {
 public class UserResult : IErrorList, IHttpStatusCode {

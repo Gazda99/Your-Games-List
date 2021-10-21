@@ -36,6 +36,10 @@ validation
 		controllers 2XXX - 7XXX
 			general 2000
 			company 2010
+			genre 	2011
+			game mode 2012
+			platform 2013
+			player perspective 2014
 	
 	
 	additional info:

@@ -41,5 +41,53 @@ public static class Routes {
             return $"{GetCompanies}/{companyId}";
         }
     }
+
+    public static class Genre {
+        private const string Root = "api";
+        private const string Base = Root + "/" + Version + "/genres";
+
+        public const string GetGenres = Base;
+        public const string GetGenre = Base + "/{genreId:int}";
+
+        public static string GetLocation(int genreId) {
+            return $"{GetGenres}/{genreId}";
+        }
+    }
+
+    public static class GameMode {
+        private const string Root = "api";
+        private const string Base = Root + "/" + Version + "/gameModes";
+
+        public const string GetGameModes = Base;
+        public const string GetGameMode = Base + "/{gameModeId:int}";
+
+        public static string GetLocation(int gameModeId) {
+            return $"{GetGameModes}/{gameModeId}";
+        }
+    }
+
+    public static class Platform {
+        private const string Root = "api";
+        private const string Base = Root + "/" + Version + "/platforms";
+
+        public const string GetPlatforms = Base;
+        public const string GetPlatform = Base + "/{platformId:int}";
+
+        public static string GetLocation(int platformId) {
+            return $"{GetPlatforms}/{platformId}";
+        }
+    }
+
+    public static class PlayerPerspective {
+        private const string Root = "api";
+        private const string Base = Root + "/" + Version + "/playerPerspectives";
+
+        public const string GetPlayerPerspectives = Base;
+        public const string GetPlayerPerspective = Base + "/{playerPerspectiveId:int}";
+
+        public static string GetLocation(int playerPerspectiveId) {
+            return $"{GetPlayerPerspectives}/{playerPerspectiveId}";
+        }
+    }
 }
 }

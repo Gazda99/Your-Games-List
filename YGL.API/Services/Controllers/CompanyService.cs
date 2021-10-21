@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YGL.API.Contracts.V1.Requests.Company;
 using YGL.API.Domain;
-using YGL.API.Domain.SafeObjects;
 using YGL.API.Errors;
+using YGL.API.SafeObjects;
 
 namespace YGL.API.Services.Controllers {
 public class CompanyService : ICompanyService {

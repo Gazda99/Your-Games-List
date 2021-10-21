@@ -68,6 +68,10 @@ public class ApiErrors : IErrorContainer<ApiErrorCodes> {
         { ApiErrorCodes.NotFound, "Resource not found." },
         { ApiErrorCodes.Forbidden, "Resource is forbidden." },
         { ApiErrorCodes.CompanyNotFound, "Company not found" },
+        { ApiErrorCodes.GenreNotFound, "Genre not found" },
+        { ApiErrorCodes.GameModeNotFound, "Game mode not found" },
+        { ApiErrorCodes.PlatformNotFound, "Platform not found" },
+        { ApiErrorCodes.PlayerPerspectiveNotFound, "Player perspective not found" },
     };
 }
 
@@ -139,5 +143,9 @@ public enum ApiErrorCodes {
     NotFound = 2000_40_01,
     Forbidden = 2000_50_10,
     CompanyNotFound = 2010_40_01,
+    GenreNotFound = 2011_40_01,
+    GameModeNotFound = 2012_40_01,
+    PlatformNotFound = 2013_40_01,
+    PlayerPerspectiveNotFound = 2014_40_01,
 }
 }

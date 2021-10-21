@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using YGL.API.Attributes;
-using YGL.API.Contracts.V1;
 using YGL.API.Contracts.V1.Requests;
 using YGL.API.Contracts.V1.Requests.Identity;
 using YGL.API.Contracts.V1.Responses;

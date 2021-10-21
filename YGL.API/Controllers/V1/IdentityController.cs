@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using YGL.API.Contracts.V1;
 using YGL.API.Contracts.V1.Requests.Identity;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.Identity;

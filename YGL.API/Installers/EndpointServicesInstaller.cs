@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YGL.API.Services.Controllers;
+using YGL.Model;
 
 namespace YGL.API.Installers {
 public class EndpointServicesInstaller : IInstaller {
@@ -8,6 +9,10 @@ public class EndpointServicesInstaller : IInstaller {
         services.AddScoped<IIdentityService, IdentityService>();
         services.AddScoped<IUserService, UserService>();
         services.AddScoped<ICompanyService, CompanyService>();
+        services.AddScoped<IGenreService, GenreService>();
+        services.AddScoped<IGameModeService, GameModeService>();
+        services.AddScoped<IPlatformService, PlatformService>();
+        services.AddScoped<IPlayerPerspectiveService, PlayerPerspectiveService>();
     }
 }
 }

@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YGL.API.Contracts.V1.Requests.Identity;
 using YGL.API.Domain;
-using YGL.API.Domain.SafeObjects;
 using YGL.API.Errors;
+using YGL.API.SafeObjects;
 using YGL.API.Validation;
+using YGL.Model;
 
 namespace YGL.API.Services.Controllers {
 public class UserService : IUserService {
@@ -21,8 +22,13 @@ public class UserService : IUserService {
 
     public async Task<UserResult> GetUser(long userId) {
         UserResult userResult = new UserResult();
-        YGL.Model.User foundUser =
-            await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Id == userId && u.ItemStatus == true);
+
+        YGL.Model.User foundUser = await _yglDataContext.Users
+            .Include(u => u.Groups)
+            .Include(u => u.ListOfGames)
+            .Include(u => u.FriendFriendOnes)
+            .Include(u => u.FriendFriendTwos)
+            .FirstOrDefaultAsync(u => u.Id == userId);
 
 
         if (foundUser is null) {
@@ -41,19 +47,21 @@ public class UserService : IUserService {
     public async Task<UserResult> GetUsers(UserFilterQuery userFilterQuery, PaginationFilter paginationFilter) {
         UserResult userResult = new UserResult();
 
-        IQueryable<YGL.Model.User> usersQueryable = _yglDataContext.Users
-            .Where(u => u.ItemStatus == true);
+        IQueryable<YGL.Model.User> usersQueryable = AddFiltersOnQueryGetUsers(userFilterQuery, _yglDataContext.Users);
 
-        usersQueryable = AddFiltersOnQueryGetUsers(userFilterQuery, usersQueryable);
-
-        List<SafeUser> safeUsers =
+        List<SafeUser> foundUsers =
             (await usersQueryable
                 .Include(u => u.Groups)
                 .Include(u => u.ListOfGames)
+                .Include(u => u.FriendFriendOnes)
+                .Include(u => u.FriendFriendTwos)
                 .ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take))
-            .ConvertAll(u => new SafeUser(u));
+            .ConvertAll(u => new SafeUser(u))
+            .OrderBy(u => u.ItemStatus ? 0 : 1)
+            .ToList();
 
-        userResult.Users = safeUsers;
+
+        userResult.Users = foundUsers;
 
         userResult.IsSuccess = true;
         userResult.StatusCode = HttpStatusCode.OK;
@@ -93,7 +101,6 @@ public class UserService : IUserService {
         foundUser.Gender = updateUserReq.Gender;
         foundUser.BirthYear = updateUserReq.BirthYear;
         foundUser.Slug = updateUserReq.Slug;
-
 
         _yglDataContext.Users.Update(foundUser);
         await _yglDataContext.SaveChangesAsync();
