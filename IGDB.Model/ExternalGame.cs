@@ -38,6 +38,11 @@ public enum ExternalCategory {
     Microsoft = 11,
     Apple = 13,
     Twitch = 14,
-    Android = 15
+    Android = 15,
+    AmazonAsin = 20,
+    AmazonLuna = 22,
+    AmazonAdg = 23,
+    EpicGameStore = 26,
+    Oculus = 28
 }
 }
