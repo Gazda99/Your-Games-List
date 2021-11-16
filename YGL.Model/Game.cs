@@ -24,6 +24,7 @@ namespace YGL.Model
             GameHasGameModes = new HashSet<GameHasGameMode>();
             GameHasGenres = new HashSet<GameHasGenre>();
             GameHasPlayerPerspectives = new HashSet<GameHasPlayerPerspective>();
+            GameHasThemes = new HashSet<GameHasTheme>();
             GameWithAgeCategories = new HashSet<GameWithAgeCategory>();
             GameWithWebsites = new HashSet<GameWithWebsite>();
             ListEntries = new HashSet<ListEntry>();
@@ -67,6 +68,8 @@ namespace YGL.Model
         public virtual ICollection<GameHasGenre> GameHasGenres { get; set; }
         [InverseProperty(nameof(GameHasPlayerPerspective.Game))]
         public virtual ICollection<GameHasPlayerPerspective> GameHasPlayerPerspectives { get; set; }
+        [InverseProperty(nameof(GameHasTheme.Game))]
+        public virtual ICollection<GameHasTheme> GameHasThemes { get; set; }
         [InverseProperty(nameof(GameWithAgeCategory.Game))]
         public virtual ICollection<GameWithAgeCategory> GameWithAgeCategories { get; set; }
         [InverseProperty(nameof(GameWithWebsite.Game))]
