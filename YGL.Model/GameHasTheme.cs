@@ -8,25 +8,21 @@ using Microsoft.EntityFrameworkCore;
 
 namespace YGL.Model
 {
-    [Table("GameHasCompany")]
-    public partial class GameHasCompany
+    [Table("GameHasTheme")]
+    public partial class GameHasTheme
     {
         [Key]
         public long Id { get; set; }
         public int GameId { get; set; }
-        public int CompanyId { get; set; }
-        public bool IsDeveloper { get; set; }
-        public bool IsPorting { get; set; }
-        public bool IsPublisher { get; set; }
-        public bool IsSupporting { get; set; }
+        public int ThemeId { get; set; }
         [Required]
         public bool? ItemStatus { get; set; }
 
-        [ForeignKey(nameof(CompanyId))]
-        [InverseProperty("GameHasCompanies")]
-        public virtual Company Company { get; set; }
         [ForeignKey(nameof(GameId))]
-        [InverseProperty("GameHasCompanies")]
+        [InverseProperty("GameHasThemes")]
         public virtual Game Game { get; set; }
+        [ForeignKey(nameof(ThemeId))]
+        [InverseProperty("GameHasThemes")]
+        public virtual Theme Theme { get; set; }
     }
 }

@@ -17,6 +17,7 @@ namespace YGL.Model
         public int GameId { get; set; }
         [Column(TypeName = "datetime")]
         public DateTime ReleaseDate { get; set; }
+        public short Region { get; set; }
         [Required]
         public bool? ItemStatus { get; set; }
 

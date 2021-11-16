@@ -1,5 +1,4 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,7 +10,7 @@ class Program {
 
         string sqlConnectionString =
             (await File.ReadAllLinesAsync("../../../../Twitch Data.txt"))[2].Replace(@"\\", @"\");
-
+        
         optionsBuilder.UseSqlServer(sqlConnectionString);
 
         YGL.Model.YGLDataContext dbConnection = new YGL.Model.YGLDataContext(optionsBuilder.Options);
@@ -23,11 +22,19 @@ class Program {
     }
 
     private static async Task Scrape(YGL.Model.YGLDataContext dbConnection) {
-        await Scrapers.ScrapCompanies(dbConnection);
-        await Scrapers.ScrapGenres(dbConnection);
-        await Scrapers.ScrapGameModes(dbConnection);
-        await Scrapers.ScrapPlatforms(dbConnection);
-        await Scrapers.ScrapPlayerPerspectives(dbConnection);
+        Scrapers scrapers = new Scrapers(dbConnection) {
+            LimitInOneRequest = 500,
+            Lop = 1
+        };
+
+        await scrapers.ScrapeGenres();
+        await scrapers.ScrapeGameModes();
+        await scrapers.ScrapePlatforms();
+        await scrapers.ScrapePlayerPerspectives();
+        await scrapers.ScrapeThemes();
+        scrapers.Lop = 4;
+        await scrapers.ScrapeCompanies();
+        await scrapers.ScrapeGames();
     }
 }
 }
