@@ -9,7 +9,7 @@ using YGL.API.Contracts.V1.Requests.GameMode;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.GameMode;
 using YGL.API.Domain;
-using YGL.API.Services.Controllers;
+using YGL.API.Services.IControllers;
 
 namespace YGL.API.Controllers.V1 {
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -23,16 +23,15 @@ public class GameModeController : ControllerBase {
 
     [HttpGet(Routes.GameMode.GetGameMode)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetGameMode(int gameModeId) {
+    public async Task<IActionResult> GetGameModes(string gameModeIds) {
         IResponse res;
 
-        GameModeResult gameModeResult =
-            await _gameModeService.GetGameMode(gameModeId);
+        GameModeResult gameModeResult = await _gameModeService.GetGameModes(gameModeIds);
 
         if (gameModeResult.IsSuccess) {
             res = gameModeResult.GameModes
                 .Select(gm => new GameModeGetSuccRes() { GameMode = gm })
-                .ToResponse();
+                .ToResponse(gameModeResult.GameModes.Count);
 
             return this.ReturnResult(gameModeResult.StatusCode, res);
         }
@@ -48,12 +47,12 @@ public class GameModeController : ControllerBase {
 
     [HttpGet(Routes.GameMode.GetGameModes)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetGameModes(
+    public async Task<IActionResult> GetGameModesFilter(
         [FromQuery] GameModeFilterQuery gameModeFilterQuery, [FromQuery] PaginationQuery paginationQuery) {
         IResponse res;
 
         GameModeResult gameModeResult =
-            await _gameModeService.GetGameModes(gameModeFilterQuery, (PaginationFilter)paginationQuery);
+            await _gameModeService.GetGameModesFilter(gameModeFilterQuery, (PaginationFilter)paginationQuery);
 
         if (gameModeResult.IsSuccess) {
             res = gameModeResult.GameModes

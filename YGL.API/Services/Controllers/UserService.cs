@@ -5,11 +5,12 @@ using System.Net;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using YGL.API.Contracts.V1.Requests.Identity;
+using YGL.API.Contracts.V1.Requests.User;
 using YGL.API.Domain;
 using YGL.API.Errors;
 using YGL.API.SafeObjects;
+using YGL.API.Services.IControllers;
 using YGL.API.Validation;
-using YGL.Model;
 
 namespace YGL.API.Services.Controllers {
 public class UserService : IUserService {
@@ -20,48 +21,58 @@ public class UserService : IUserService {
     }
 
 
-    public async Task<UserResult> GetUser(long userId) {
+    public async Task<UserResult> GetUsers(string userIds) {
         UserResult userResult = new UserResult();
 
-        YGL.Model.User foundUser = await _yglDataContext.Users
+        if (!ValidationUrl.TryParseLong(userIds, userResult, out List<long> ids)) {
+            userResult.IsSuccess = false;
+            userResult.StatusCode = HttpStatusCode.UnprocessableEntity;
+            return userResult;
+        }
+
+        List<YGL.Model.User> foundUsers = await _yglDataContext.Users
             .Include(u => u.Groups)
             .Include(u => u.ListOfGames)
             .Include(u => u.FriendFriendOnes)
             .Include(u => u.FriendFriendTwos)
-            .FirstOrDefaultAsync(u => u.Id == userId);
+            .Where(u => ids.Contains(u.Id)).ToListAsync();
 
-
-        if (foundUser is null) {
+        if (foundUsers is null || foundUsers.Count == 0) {
             userResult.IsSuccess = false;
             userResult.StatusCode = HttpStatusCode.NotFound;
             userResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.UserNotFound);
             return userResult;
         }
 
-        userResult.Users = new List<SafeUser>() { new SafeUser(foundUser) };
+        userResult.Users = foundUsers.ConvertAll(u => new SafeUser(u));
         userResult.IsSuccess = true;
         userResult.StatusCode = HttpStatusCode.OK;
         return userResult;
     }
 
-    public async Task<UserResult> GetUsers(UserFilterQuery userFilterQuery, PaginationFilter paginationFilter) {
+    public async Task<UserResult> GetUsersFilter(UserFilterQuery userFilterQuery, PaginationFilter paginationFilter) {
         UserResult userResult = new UserResult();
 
         IQueryable<YGL.Model.User> usersQueryable = AddFiltersOnQueryGetUsers(userFilterQuery, _yglDataContext.Users);
 
-        List<SafeUser> foundUsers =
+        List<YGL.Model.User> foundUsers =
             (await usersQueryable
                 .Include(u => u.Groups)
                 .Include(u => u.ListOfGames)
                 .Include(u => u.FriendFriendOnes)
                 .Include(u => u.FriendFriendTwos)
-                .ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take))
-            .ConvertAll(u => new SafeUser(u))
+                .ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
+
+        if (foundUsers is null || foundUsers.Count == 0) {
+            userResult.IsSuccess = false;
+            userResult.StatusCode = HttpStatusCode.NotFound;
+            userResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.UserNotFound);
+            return userResult;
+        }
+
+        userResult.Users = foundUsers.ConvertAll(u => new SafeUser(u))
             .OrderBy(u => u.ItemStatus ? 0 : 1)
             .ToList();
-
-
-        userResult.Users = foundUsers;
 
         userResult.IsSuccess = true;
         userResult.StatusCode = HttpStatusCode.OK;

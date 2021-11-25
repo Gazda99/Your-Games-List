@@ -9,7 +9,7 @@ using YGL.API.Contracts.V1.Requests.Platform;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.Platform;
 using YGL.API.Domain;
-using YGL.API.Services.Controllers;
+using YGL.API.Services.IControllers;
 
 namespace YGL.API.Controllers.V1 {
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -23,16 +23,16 @@ public class PlatformController : ControllerBase {
 
     [HttpGet(Routes.Platform.GetPlatform)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetPlatform(int platformId) {
+    public async Task<IActionResult> GetPlatforms(string platformIds) {
         IResponse res;
 
         PlatformResult platformResult =
-            await _platformService.GetPlatform(platformId);
+            await _platformService.GetPlatforms(platformIds);
 
         if (platformResult.IsSuccess) {
             res = platformResult.Platforms
                 .Select(p => new PlatformGetSuccRes() { Platform = p })
-                .ToResponse();
+                .ToResponse(platformResult.Platforms.Count);
 
             return this.ReturnResult(platformResult.StatusCode, res);
         }
@@ -48,12 +48,12 @@ public class PlatformController : ControllerBase {
 
     [HttpGet(Routes.Platform.GetPlatforms)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetPlatforms(
+    public async Task<IActionResult> GetPlatformsFilter(
         [FromQuery] PlatformFilterQuery platformFilterQuery, [FromQuery] PaginationQuery paginationQuery) {
         IResponse res;
 
         PlatformResult platformResult =
-            await _platformService.GetPlatforms(platformFilterQuery, (PaginationFilter)paginationQuery);
+            await _platformService.GetPlatformsFilter(platformFilterQuery, (PaginationFilter)paginationQuery);
 
         if (platformResult.IsSuccess) {
             res = platformResult.Platforms

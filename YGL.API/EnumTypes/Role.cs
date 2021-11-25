@@ -2,46 +2,44 @@
 
 namespace YGL.API.EnumTypes {
 public static class Role {
-    
     public const string User = "User";
     public const string Mod = "Mod";
     public const string Admin = "Admin";
 
     public const Roles Default = Roles.User;
-
-
-    private static readonly Dictionary<int, string> RoleDict = new Dictionary<int, string>() {
-        { (int)Roles.User, User },
-        { (int)Roles.Mod, Mod },
-        { (int)Roles.Admin, Admin },
+    
+    private static readonly Dictionary<short, string> RoleDict = new Dictionary<short, string>() {
+        { (short)Roles.User, User },
+        { (short)Roles.Mod, Mod },
+        { (short)Roles.Admin, Admin },
     };
 
-    public static int? GetRoleKeyOrNull(string providedValue) {
-        foreach ((int key, string value) in RoleDict) {
+    public static short? GetRoleKeyOrNull(string providedValue) {
+        foreach ((short key, string value) in RoleDict) {
             if (value == providedValue) return key;
         }
 
         return null;
     }
 
-    public static int GetRoleKeyOrDefault(string providedValue) {
-        foreach ((int key, string value) in RoleDict) {
+    public static short GetRoleKeyOrDefault(string providedValue) {
+        foreach ((short key, string value) in RoleDict) {
             if (value == providedValue) return key;
         }
 
-        return (int)Roles.User;
+        return (short)Roles.User;
     }
 
-    public static string GetRoleValueOrNull(int key) {
+    public static string GetRoleValueOrNull(short key) {
         return RoleDict.ContainsKey(key) ? RoleDict[key] : null;
     }
 
-    public static string GetRoleValueOrDefault(int key) {
+    public static string GetRoleValueOrDefault(short key) {
         return RoleDict.ContainsKey(key) ? RoleDict[key] : User;
     }
-
-    public static Roles GetDefault() {
-        return Roles.User;
+    
+    public static bool DoesExists(short role) {
+        return RoleDict.ContainsKey(role);
     }
 }
 

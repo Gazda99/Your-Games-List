@@ -8,6 +8,8 @@ using YGL.API.Contracts.V1.Requests.Company;
 using YGL.API.Domain;
 using YGL.API.Errors;
 using YGL.API.SafeObjects;
+using YGL.API.Services.IControllers;
+using YGL.API.Validation;
 
 namespace YGL.API.Services.Controllers {
 public class CompanyService : ICompanyService {
@@ -17,27 +19,33 @@ public class CompanyService : ICompanyService {
         _yglDataContext = yglDataContext;
     }
 
-    public async Task<CompanyResult> GetCompany(int companyId) {
+    public async Task<CompanyResult> GetCompanies(string companyIds) {
         CompanyResult companyResult = new CompanyResult();
 
-        YGL.Model.Company foundCompany =
-            await _yglDataContext.Companies.FirstOrDefaultAsync(c => c.Id == companyId && c.ItemStatus == true);
+        if (!ValidationUrl.TryParseInt(companyIds, companyResult, out List<int> ids)) {
+            companyResult.IsSuccess = false;
+            companyResult.StatusCode = HttpStatusCode.UnprocessableEntity;
+            return companyResult;
+        }
 
-        if (foundCompany is null) {
+        List<YGL.Model.Company> foundCompanies = await _yglDataContext.Companies.Where(c => ids.Contains(c.Id)).ToListAsync();
+
+        if (foundCompanies is null || foundCompanies.Count == 0) {
             companyResult.IsSuccess = false;
             companyResult.StatusCode = HttpStatusCode.NotFound;
             companyResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.CompanyNotFound);
             return companyResult;
         }
 
-        companyResult.Companies = new List<SafeCompany>() { new SafeCompany(foundCompany) };
+        List<SafeCompany> safeCompanies = foundCompanies.ConvertAll(c => new SafeCompany(c));
 
+        companyResult.Companies = safeCompanies;
         companyResult.IsSuccess = true;
         companyResult.StatusCode = HttpStatusCode.OK;
         return companyResult;
     }
 
-    public async Task<CompanyResult> GetCompanies(CompanyFilterQuery companyFilterQuery,
+    public async Task<CompanyResult> GetCompaniesFilter(CompanyFilterQuery companyFilterQuery,
         PaginationFilter paginationFilter) {
         CompanyResult companyResult = new CompanyResult();
 
@@ -46,11 +54,17 @@ public class CompanyService : ICompanyService {
 
         companyQueryable = AddFiltersOnQueryGetCompanies(companyFilterQuery, companyQueryable);
 
-        List<SafeCompany> safeCompanies =
-            (await companyQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take))
-            .ConvertAll(c => new SafeCompany(c));
+        List<YGL.Model.Company> foundCompanies =
+            (await companyQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
-        companyResult.Companies = safeCompanies;
+        if (foundCompanies is null || foundCompanies.Count == 0) {
+            companyResult.IsSuccess = false;
+            companyResult.StatusCode = HttpStatusCode.NotFound;
+            companyResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.CompanyNotFound);
+            return companyResult;
+        }
+
+        companyResult.Companies = foundCompanies.ConvertAll(c => new SafeCompany(c));
 
         companyResult.IsSuccess = true;
         companyResult.StatusCode = HttpStatusCode.OK;

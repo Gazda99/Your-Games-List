@@ -8,6 +8,8 @@ using YGL.API.Contracts.V1.Requests.Genre;
 using YGL.API.Domain;
 using YGL.API.Errors;
 using YGL.API.SafeObjects;
+using YGL.API.Services.IControllers;
+using YGL.API.Validation;
 
 namespace YGL.API.Services.Controllers {
 public class GenreService : IGenreService {
@@ -17,27 +19,32 @@ public class GenreService : IGenreService {
         _yglDataContext = yglDataContext;
     }
 
-    public async Task<GenreResult> GetGenre(int genreId) {
+    public async Task<GenreResult> GetGenres(string genreIds) {
         GenreResult genreResult = new GenreResult();
 
-        YGL.Model.Genre foundGenre =
-            await _yglDataContext.Genres.FirstOrDefaultAsync(g => g.Id == genreId && g.ItemStatus == true);
+        if (!ValidationUrl.TryParseInt(genreIds, genreResult, out List<int> ids)) {
+            genreResult.IsSuccess = false;
+            genreResult.StatusCode = HttpStatusCode.UnprocessableEntity;
+            return genreResult;
+        }
 
-        if (foundGenre is null) {
+        List<YGL.Model.Genre> foundGenres = await _yglDataContext.Genres.Where(g => ids.Contains(g.Id)).ToListAsync();
+
+        if (foundGenres is null || foundGenres.Count == 0) {
             genreResult.IsSuccess = false;
             genreResult.StatusCode = HttpStatusCode.NotFound;
             genreResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.GenreNotFound);
             return genreResult;
         }
 
-        genreResult.Genres = new List<SafeGenre>() { new SafeGenre(foundGenre) };
+        genreResult.Genres = foundGenres.ConvertAll(g => new SafeGenre(g));
 
         genreResult.IsSuccess = true;
         genreResult.StatusCode = HttpStatusCode.OK;
         return genreResult;
     }
 
-    public async Task<GenreResult> GetGenres(GenreFilterQuery genreFilterQuery, PaginationFilter paginationFilter) {
+    public async Task<GenreResult> GetGenresFilter(GenreFilterQuery genreFilterQuery, PaginationFilter paginationFilter) {
         GenreResult genreResult = new GenreResult();
 
         IQueryable<YGL.Model.Genre> genreQueryable = _yglDataContext.Genres
@@ -45,11 +52,17 @@ public class GenreService : IGenreService {
 
         genreQueryable = AddFiltersOnQueryGetGenres(genreFilterQuery, genreQueryable);
 
-        List<SafeGenre> safeGenres =
-            (await genreQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take))
-            .ConvertAll(g => new SafeGenre(g));
+        List<YGL.Model.Genre> foundGenres =
+            (await genreQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
-        genreResult.Genres = safeGenres;
+        if (foundGenres is null || foundGenres.Count == 0) {
+            genreResult.IsSuccess = false;
+            genreResult.StatusCode = HttpStatusCode.NotFound;
+            genreResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.CompanyNotFound);
+            return genreResult;
+        }
+
+        genreResult.Genres = foundGenres.ConvertAll(g => new SafeGenre(g));
 
         genreResult.IsSuccess = true;
         genreResult.StatusCode = HttpStatusCode.OK;

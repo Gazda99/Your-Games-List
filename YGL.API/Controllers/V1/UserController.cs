@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using YGL.API.Attributes;
 using YGL.API.Contracts.V1.Requests;
 using YGL.API.Contracts.V1.Requests.Identity;
+using YGL.API.Contracts.V1.Requests.User;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.User;
 using YGL.API.Domain;
 using YGL.API.EnumTypes;
-using YGL.API.Services.Controllers;
+using YGL.API.Services.IControllers;
 
 
 namespace YGL.API.Controllers.V1 {
@@ -24,14 +25,14 @@ public class UserController : ControllerBase {
     }
 
     [HttpGet(Routes.User.GetUser)]
-    public async Task<IActionResult> GetUsers(long userId) {
-        UserResult userResult = await _userService.GetUser(userId);
+    public async Task<IActionResult> GetUsers(string userIds) {
+        UserResult userResult = await _userService.GetUsers(userIds);
         IResponse res;
 
         if (userResult.IsSuccess) {
             res = userResult.Users
                 .Select(u => new UserGetSuccRes() { User = u })
-                .ToResponse();
+                .ToResponse(userResult.Users.Count);
 
             return this.ReturnResult(userResult.StatusCode, res);
         }
@@ -46,9 +47,9 @@ public class UserController : ControllerBase {
 
 
     [HttpGet(Routes.User.GetUsers)]
-    public async Task<IActionResult> GetUsers(
+    public async Task<IActionResult> GetUsersFilter(
         [FromQuery] UserFilterQuery userFilterQuery, [FromQuery] PaginationQuery paginationQuery) {
-        UserResult userResult = await _userService.GetUsers(userFilterQuery, (PaginationFilter)paginationQuery);
+        UserResult userResult = await _userService.GetUsersFilter(userFilterQuery, (PaginationFilter)paginationQuery);
         IResponse res;
 
         if (userResult.IsSuccess) {
@@ -75,7 +76,7 @@ public class UserController : ControllerBase {
         IResponse res;
 
         if (userResult.IsSuccess) {
-            res = new UserUpdateSuccRes() { IsSuccess = true }.ToResponse();
+            res = new UserUpdateSuccRes() { IsSuccess = true }.ToSingleResponse();
             return this.ReturnResult(userResult.StatusCode, res);
         }
 
@@ -95,7 +96,7 @@ public class UserController : ControllerBase {
         IResponse res;
 
         if (userResult.IsSuccess) {
-            res = new UserDeleteSuccRes() { IsSuccess = true }.ToResponse();
+            res = new UserDeleteSuccRes() { IsSuccess = true }.ToSingleResponse();
             return this.ReturnResult(userResult.StatusCode, res);
         }
 

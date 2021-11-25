@@ -8,6 +8,8 @@ using YGL.API.Contracts.V1.Requests.Platform;
 using YGL.API.Domain;
 using YGL.API.Errors;
 using YGL.API.SafeObjects;
+using YGL.API.Services.IControllers;
+using YGL.API.Validation;
 
 namespace YGL.API.Services.Controllers {
 public class PlatformService : IPlatformService {
@@ -17,27 +19,33 @@ public class PlatformService : IPlatformService {
         _yglDataContext = yglDataContext;
     }
 
-    public async Task<PlatformResult> GetPlatform(int platformId) {
+    public async Task<PlatformResult> GetPlatforms(string platformIds) {
         PlatformResult platformResult = new PlatformResult();
 
-        YGL.Model.Platform foundPlatform =
-            await _yglDataContext.Platforms.FirstOrDefaultAsync(p => p.Id == platformId && p.ItemStatus == true);
+        if (!ValidationUrl.TryParseInt(platformIds, platformResult, out List<int> ids)) {
+            platformResult.IsSuccess = false;
+            platformResult.StatusCode = HttpStatusCode.UnprocessableEntity;
+            return platformResult;
+        }
 
-        if (foundPlatform is null) {
+        List<YGL.Model.Platform> foundPlatforms = await _yglDataContext.Platforms.Where(p => ids.Contains(p.Id)).ToListAsync();
+
+
+        if (foundPlatforms is null || foundPlatforms.Count == 0) {
             platformResult.IsSuccess = false;
             platformResult.StatusCode = HttpStatusCode.NotFound;
             platformResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.PlatformNotFound);
             return platformResult;
         }
 
-        platformResult.Platforms = new List<SafePlatform>() { new SafePlatform(foundPlatform) };
+        platformResult.Platforms = foundPlatforms.ConvertAll(p => new SafePlatform(p));
 
         platformResult.IsSuccess = true;
         platformResult.StatusCode = HttpStatusCode.OK;
         return platformResult;
     }
 
-    public async Task<PlatformResult> GetPlatforms(PlatformFilterQuery platformFilterQuery,
+    public async Task<PlatformResult> GetPlatformsFilter(PlatformFilterQuery platformFilterQuery,
         PaginationFilter paginationFilter) {
         PlatformResult platformResult = new PlatformResult();
 
@@ -46,11 +54,17 @@ public class PlatformService : IPlatformService {
 
         platformQueryable = AddFiltersOnQueryGetPlatforms(platformFilterQuery, platformQueryable);
 
-        List<SafePlatform> safePlatforms =
-            (await platformQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take))
-            .ConvertAll(p => new SafePlatform(p));
+        List<YGL.Model.Platform> foundPlatforms =
+            (await platformQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
-        platformResult.Platforms = safePlatforms;
+        if (foundPlatforms is null || foundPlatforms.Count == 0) {
+            platformResult.IsSuccess = false;
+            platformResult.StatusCode = HttpStatusCode.NotFound;
+            platformResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.PlatformNotFound);
+            return platformResult;
+        }
+
+        platformResult.Platforms = foundPlatforms.ConvertAll(p => new SafePlatform(p));
 
         platformResult.IsSuccess = true;
         platformResult.StatusCode = HttpStatusCode.OK;

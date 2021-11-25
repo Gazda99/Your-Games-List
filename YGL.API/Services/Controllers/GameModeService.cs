@@ -8,6 +8,8 @@ using YGL.API.Contracts.V1.Requests.GameMode;
 using YGL.API.Domain;
 using YGL.API.Errors;
 using YGL.API.SafeObjects;
+using YGL.API.Services.IControllers;
+using YGL.API.Validation;
 
 namespace YGL.API.Services.Controllers {
 public class GameModeService : IGameModeService {
@@ -17,27 +19,32 @@ public class GameModeService : IGameModeService {
         _yglDataContext = yglDataContext;
     }
 
-    public async Task<GameModeResult> GetGameMode(int gameModeId) {
+    public async Task<GameModeResult> GetGameModes(string gameModesIds) {
         GameModeResult gameModeResult = new GameModeResult();
 
-        YGL.Model.GameMode foundGameMode =
-            await _yglDataContext.GameModes.FirstOrDefaultAsync(gm => gm.Id == gameModeId && gm.ItemStatus == true);
+        if (!ValidationUrl.TryParseInt(gameModesIds, gameModeResult, out List<int> ids)) {
+            gameModeResult.IsSuccess = false;
+            gameModeResult.StatusCode = HttpStatusCode.UnprocessableEntity;
+            return gameModeResult;
+        }
 
-        if (foundGameMode is null) {
+        List<YGL.Model.GameMode> foundGameModes = await _yglDataContext.GameModes.Where(gm => ids.Contains(gm.Id)).ToListAsync();
+
+        if (foundGameModes is null || foundGameModes.Count == 0) {
             gameModeResult.IsSuccess = false;
             gameModeResult.StatusCode = HttpStatusCode.NotFound;
             gameModeResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.GameModeNotFound);
             return gameModeResult;
         }
 
-        gameModeResult.GameModes = new List<SafeGameMode>() { new SafeGameMode(foundGameMode) };
+        gameModeResult.GameModes = foundGameModes.ConvertAll(gm => new SafeGameMode(gm));
 
         gameModeResult.IsSuccess = true;
         gameModeResult.StatusCode = HttpStatusCode.OK;
         return gameModeResult;
     }
 
-    public async Task<GameModeResult> GetGameModes(GameModeFilterQuery gameModeFilterQuery,
+    public async Task<GameModeResult> GetGameModesFilter(GameModeFilterQuery gameModeFilterQuery,
         PaginationFilter paginationFilter) {
         GameModeResult gameModeResult = new GameModeResult();
 
@@ -46,12 +53,18 @@ public class GameModeService : IGameModeService {
 
         gameModeQueryable = AddFiltersOnQueryGetGameModes(gameModeFilterQuery, gameModeQueryable);
 
-        List<SafeGameMode> safeGameModes =
-            (await gameModeQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take))
-            .ConvertAll(gm => new SafeGameMode(gm));
+        List<YGL.Model.GameMode> foundGameModes =
+            (await gameModeQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
-        gameModeResult.GameModes = safeGameModes;
+        if (foundGameModes is null || foundGameModes.Count == 0) {
+            gameModeResult.IsSuccess = false;
+            gameModeResult.StatusCode = HttpStatusCode.NotFound;
+            gameModeResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.GameModeNotFound);
+            return gameModeResult;
+        }
 
+        gameModeResult.GameModes = foundGameModes.ConvertAll(gm => new SafeGameMode(gm));
+        
         gameModeResult.IsSuccess = true;
         gameModeResult.StatusCode = HttpStatusCode.OK;
         return gameModeResult;

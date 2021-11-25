@@ -31,7 +31,7 @@ public class ApiErrors : IErrorContainer<ApiErrorCodes> {
         { ApiErrorCodes.EmailIsTooShort, "Provided email is too short." },
         { ApiErrorCodes.EmailIsTooLong, "Provided email is too long." },
         { ApiErrorCodes.EmailDomainBlacklisted, "Provided email has a domain which is blacklisted." },
-        { ApiErrorCodes.EmailNotFound, "Provided email not found" },
+        { ApiErrorCodes.EmailNotFound, "Provided email not found." },
         { ApiErrorCodes.EmailAlreadyInUse, "Email already is in use." },
         { ApiErrorCodes.EmailNotConfirmed, "Email not confirmed" },
 
@@ -49,29 +49,34 @@ public class ApiErrors : IErrorContainer<ApiErrorCodes> {
         { ApiErrorCodes.SlugIsTooLong, "Slug is too long." },
         { ApiErrorCodes.SlugIsAlreadyTaken, "Slug is already taken." },
 
-        { ApiErrorCodes.EmailConfirmationIsUsed, "Email confirmation is used" },
-        { ApiErrorCodes.EmailAlreadyConfirmed, "Email is already confirmed" },
+        { ApiErrorCodes.EmailConfirmationIsUsed, "Email confirmation is used." },
+        { ApiErrorCodes.EmailAlreadyConfirmed, "Email is already confirmed." },
 
-        { ApiErrorCodes.EmailConfirmationExpired, "Email confirmation expired" },
-        { ApiErrorCodes.EmailConfirmationNotValid, "Email confirmation is not valid" },
+        { ApiErrorCodes.EmailConfirmationExpired, "Email confirmation expired." },
+        { ApiErrorCodes.EmailConfirmationNotValid, "Email confirmation is not valid." },
         { ApiErrorCodes.CouldNotSentEmailConfirmation, "Could not sent email - account confirmation." },
 
-        { ApiErrorCodes.PasswordResetEmailNotValid, "Reset password email is not valid." },
-        { ApiErrorCodes.PasswordResetEmailExpired, "Reset password email expired" },
+        { ApiErrorCodes.PasswordResetEmailNotValid, "Reset password email is not valid" },
+        { ApiErrorCodes.PasswordResetEmailExpired, "Reset password email expired." },
         { ApiErrorCodes.PasswordResetEmailIsUsed, "Reset password email is used." },
         { ApiErrorCodes.CouldNotSentResetPasswordEmail, "Could not sent email - reset password." },
 
         { ApiErrorCodes.PasswordResetTokenNotValid, "Reset password token is not valid." },
-        { ApiErrorCodes.PasswordResetTokenExpired, "Reset password token expired" },
+        { ApiErrorCodes.PasswordResetTokenExpired, "Reset password token expired." },
         { ApiErrorCodes.PasswordResetTokenIsUsed, "Reset password token is used." },
+
+
+        { ApiErrorCodes.CannotParseIdsInUrlBadValue, "Cannot parse provided id list - bad value provided." },
+        { ApiErrorCodes.CannotParseIdsInUrlTooManyIds, "Cannot parse provided id list - too many ids provided." },
+        { ApiErrorCodes.CannotParseIdsInUrlNonPositiveId, "Cannot parse provided id list - id must be > 0." },
 
         { ApiErrorCodes.NotFound, "Resource not found." },
         { ApiErrorCodes.Forbidden, "Resource is forbidden." },
         { ApiErrorCodes.CompanyNotFound, "Company not found" },
-        { ApiErrorCodes.GenreNotFound, "Genre not found" },
-        { ApiErrorCodes.GameModeNotFound, "Game mode not found" },
-        { ApiErrorCodes.PlatformNotFound, "Platform not found" },
-        { ApiErrorCodes.PlayerPerspectiveNotFound, "Player perspective not found" },
+        { ApiErrorCodes.GenreNotFound, "Genre not found." },
+        { ApiErrorCodes.GameModeNotFound, "Game mode not found." },
+        { ApiErrorCodes.PlatformNotFound, "Platform not found." },
+        { ApiErrorCodes.PlayerPerspectiveNotFound, "Player perspective not found." },
     };
 }
 
@@ -138,6 +143,11 @@ public enum ApiErrorCodes {
     PasswordResetTokenNotValid = 1400_50_01,
     PasswordResetTokenExpired = 1400_50_02,
     PasswordResetTokenIsUsed = 1400_41_01,
+
+
+    CannotParseIdsInUrlBadValue = 2000_30_02,
+    CannotParseIdsInUrlTooManyIds = 2000_30_04,
+    CannotParseIdsInUrlNonPositiveId = 2000_30_10,
 
 
     NotFound = 2000_40_01,

@@ -9,7 +9,7 @@ using YGL.API.Contracts.V1.Requests.Genre;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.Genre;
 using YGL.API.Domain;
-using YGL.API.Services.Controllers;
+using YGL.API.Services.IControllers;
 
 namespace YGL.API.Controllers.V1 {
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -23,16 +23,15 @@ public class GenreController : ControllerBase {
 
     [HttpGet(Routes.Genre.GetGenre)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetGenre(int genreId) {
+    public async Task<IActionResult> GetGenres(string genreIds) {
         IResponse res;
 
-        GenreResult genreResult =
-            await _genreService.GetGenre(genreId);
+        GenreResult genreResult = await _genreService.GetGenres(genreIds);
 
         if (genreResult.IsSuccess) {
             res = genreResult.Genres
                 .Select(g => new GenreGetSuccRes() { Genre = g })
-                .ToResponse();
+                .ToResponse(genreResult.Genres.Count);
 
             return this.ReturnResult(genreResult.StatusCode, res);
         }
@@ -48,12 +47,12 @@ public class GenreController : ControllerBase {
 
     [HttpGet(Routes.Genre.GetGenres)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetGenres(
+    public async Task<IActionResult> GetGenresFilter(
         [FromQuery] GenreFilterQuery genreFilterQuery, [FromQuery] PaginationQuery paginationQuery) {
         IResponse res;
 
         GenreResult genreResult =
-            await _genreService.GetGenres(genreFilterQuery, (PaginationFilter)paginationQuery);
+            await _genreService.GetGenresFilter(genreFilterQuery, (PaginationFilter)paginationQuery);
 
         if (genreResult.IsSuccess) {
             res = genreResult.Genres

@@ -9,7 +9,7 @@ using YGL.API.Contracts.V1.Requests.Company;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.Company;
 using YGL.API.Domain;
-using YGL.API.Services.Controllers;
+using YGL.API.Services.IControllers;
 
 namespace YGL.API.Controllers.V1 {
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -19,20 +19,18 @@ public class CompanyController : ControllerBase {
     public CompanyController(ICompanyService companyService) {
         _companyService = companyService;
     }
-
-
+    
     [HttpGet(Routes.Company.GetCompany)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetCompany(int companyId) {
+    public async Task<IActionResult> GetCompanies(string companyIds) {
         IResponse res;
 
-        CompanyResult companyResult =
-            await _companyService.GetCompany(companyId);
+        CompanyResult companyResult = await _companyService.GetCompanies(companyIds);
 
         if (companyResult.IsSuccess) {
             res = companyResult.Companies
                 .Select(c => new CompanyGetSuccRes() { Company = c })
-                .ToResponse();
+                .ToResponse(companyResult.Companies.Count);
 
             return this.ReturnResult(companyResult.StatusCode, res);
         }
@@ -48,12 +46,11 @@ public class CompanyController : ControllerBase {
 
     [HttpGet(Routes.Company.GetCompanies)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetCompanies(
+    public async Task<IActionResult> GetCompaniesFilter(
         [FromQuery] CompanyFilterQuery companyFilterQuery, [FromQuery] PaginationQuery paginationQuery) {
         IResponse res;
 
-        CompanyResult companyResult =
-            await _companyService.GetCompanies(companyFilterQuery, (PaginationFilter)paginationQuery);
+        CompanyResult companyResult = await _companyService.GetCompaniesFilter(companyFilterQuery, (PaginationFilter)paginationQuery);
 
         if (companyResult.IsSuccess) {
             res = companyResult.Companies

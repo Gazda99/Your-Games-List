@@ -52,7 +52,7 @@ public class JwtInstaller : IInstaller {
         context.Response.ContentType = ContentTypes.ApplicationJson;
         context.Response.StatusCode = 403;
         
-        tokenValidationFailRes.ToResponse();
+        tokenValidationFailRes.ToSingleResponse();
 
         return context.Response.WriteAsync(JsonConvert.SerializeObject(tokenValidationFailRes));
     }
@@ -73,7 +73,7 @@ public class JwtInstaller : IInstaller {
         context.Response.ContentType = ContentTypes.ApplicationJson;
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         
-        tokenValidationFailRes.ToResponse();
+        tokenValidationFailRes.ToSingleResponse();
 
         return context.Response.WriteAsync(JsonConvert.SerializeObject(tokenValidationFailRes));
     }

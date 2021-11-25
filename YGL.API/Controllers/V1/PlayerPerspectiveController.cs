@@ -9,7 +9,7 @@ using YGL.API.Contracts.V1.Requests.PlayerPerspective;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.PlayerPerspective;
 using YGL.API.Domain;
-using YGL.API.Services.Controllers;
+using YGL.API.Services.IControllers;
 
 namespace YGL.API.Controllers.V1 {
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
@@ -23,16 +23,15 @@ public class PlayerPerspectiveController : ControllerBase {
 
     [HttpGet(Routes.PlayerPerspective.GetPlayerPerspective)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetPlayerPerspective(int playerPerspectiveId) {
+    public async Task<IActionResult> GetPlayerPerspectives(string playerPerspectiveIds) {
         IResponse res;
 
-        PlayerPerspectiveResult perspectiveResult =
-            await _perspectiveService.GetPlayerPerspective(playerPerspectiveId);
+        PlayerPerspectiveResult perspectiveResult = await _perspectiveService.GetPlayerPerspectives(playerPerspectiveIds);
 
         if (perspectiveResult.IsSuccess) {
             res = perspectiveResult.PlayerPerspectives
                 .Select(p => new PlayerPerspectiveGetSuccRes() { PlayerPerspective = p })
-                .ToResponse();
+                .ToResponse(perspectiveResult.PlayerPerspectives.Count);
 
             return this.ReturnResult(perspectiveResult.StatusCode, res);
         }
@@ -48,12 +47,12 @@ public class PlayerPerspectiveController : ControllerBase {
 
     [HttpGet(Routes.PlayerPerspective.GetPlayerPerspectives)]
     [RedisCached(3600)]
-    public async Task<IActionResult> GetPlayerPerspectives(
+    public async Task<IActionResult> GetPlayerPerspectivesFilter(
         [FromQuery] PlayerPerspectiveFilterQuery perspectiveFilterQuery, [FromQuery] PaginationQuery paginationQuery) {
         IResponse res;
 
         PlayerPerspectiveResult perspectiveResult =
-            await _perspectiveService.GetPlayerPerspectives(perspectiveFilterQuery, (PaginationFilter)paginationQuery);
+            await _perspectiveService.GetPlayerPerspectivesFilter(perspectiveFilterQuery, (PaginationFilter)paginationQuery);
 
         if (perspectiveResult.IsSuccess) {
             res = perspectiveResult.PlayerPerspectives

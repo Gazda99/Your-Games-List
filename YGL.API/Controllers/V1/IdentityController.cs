@@ -4,7 +4,7 @@ using YGL.API.Contracts.V1.Requests.Identity;
 using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.Identity;
 using YGL.API.Domain;
-using YGL.API.Services.Controllers;
+using YGL.API.Services.IControllers;
 
 namespace YGL.API.Controllers.V1 {
 public class IdentityController : ControllerBase {
@@ -25,7 +25,7 @@ public class IdentityController : ControllerBase {
                 UserId = authResult.UserId,
                 JwtToken = authResult.JwtToken,
                 RefreshToken = authResult.RefreshToken
-            }.ToResponse();
+            }.ToSingleResponse();
             return this.ReturnResult(authResult.StatusCode, res);
         }
 
@@ -43,7 +43,7 @@ public class IdentityController : ControllerBase {
         if (authResult.IsSuccess) {
             res = new RegisterSuccessRes() {
                 IsSuccess = true
-            }.ToResponse();
+            }.ToSingleResponse();
             return this.ReturnResult(authResult.StatusCode, res, authResult.Location);
         }
 
@@ -60,7 +60,7 @@ public class IdentityController : ControllerBase {
             res = new RefreshTokenSuccessRes() {
                 JwtToken = authResult.JwtToken,
                 RefreshToken = authResult.RefreshToken
-            }.ToResponse();
+            }.ToSingleResponse();
             return this.ReturnResult(authResult.StatusCode, res);
         }
 
@@ -75,7 +75,7 @@ public class IdentityController : ControllerBase {
         IResponse res;
 
         if (emailConfirmationResult.IsSuccess) {
-            res = new EmailConfirmationSuccessRes() { IsSuccess = true }.ToResponse();
+            res = new EmailConfirmationSuccessRes() { IsSuccess = true }.ToSingleResponse();
             return this.ReturnResult(emailConfirmationResult.StatusCode, res);
         }
 
@@ -89,7 +89,7 @@ public class IdentityController : ControllerBase {
         IResponse res;
 
         if (emailConfirmationResult.IsSuccess) {
-            res = new EmailConfirmationSuccessRes() { IsSuccess = true }.ToResponse();
+            res = new EmailConfirmationSuccessRes() { IsSuccess = true }.ToSingleResponse();
             return this.ReturnResult(emailConfirmationResult.StatusCode, res);
         }
 
@@ -103,7 +103,7 @@ public class IdentityController : ControllerBase {
         IResponse res;
 
         if (passwordResetResult.IsSuccess) {
-            res = new PasswordResetSendEmailSuccessRes() { IsSuccess = true }.ToResponse();
+            res = new PasswordResetSendEmailSuccessRes() { IsSuccess = true }.ToSingleResponse();
             return this.ReturnResult(passwordResetResult.StatusCode, res);
         }
 
@@ -119,7 +119,7 @@ public class IdentityController : ControllerBase {
 
         if (passwordResetResult.IsSuccess) {
             res = new PasswordResetConfirmationSuccessRes()
-                { PasswordResetToken = passwordResetResult.PasswordResetToken }.ToResponse();
+                { PasswordResetToken = passwordResetResult.PasswordResetToken }.ToSingleResponse();
             return this.ReturnResult(passwordResetResult.StatusCode, res);
         }
 
@@ -134,7 +134,7 @@ public class IdentityController : ControllerBase {
         IResponse res;
 
         if (passwordResetResult.IsSuccess) {
-            res = new PasswordResetSuccessRes() { IsSuccess = true }.ToResponse();
+            res = new PasswordResetSuccessRes() { IsSuccess = true }.ToSingleResponse();
             return this.ReturnResult(passwordResetResult.StatusCode, res);
         }
 

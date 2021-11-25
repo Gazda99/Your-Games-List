@@ -1,11 +1,15 @@
-﻿namespace YGL.API.Contracts.V1.Responses {
+﻿using System.Collections.Generic;
+
+namespace YGL.API.Contracts.V1.Responses {
 public class Response<T> : IResponse where T : IObjectForResponse {
     public Response() { }
 
-    public Response(T data) {
+    public Response(IEnumerable<T> data) {
         Data = data;
     }
 
-    public T Data { get; set; }
+    public IEnumerable<T> Data { get; set; }
+
+    public int? Amount { get; set; }
 }
 }

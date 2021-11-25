@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 using YGL.API.Domain;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.IControllers {
 public interface IIdentityService {
     public Task<AuthenticationResult> LoginAsync(string username, string password);
 

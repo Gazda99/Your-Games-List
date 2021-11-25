@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using YGL.API.Contracts;
 using YGL.API.Controllers.V1;
 using YGL.API.HealthChecks;
@@ -64,6 +65,12 @@ public class Startup {
 
     private async Task HealthCheckResponseWriter(HttpContext context, HealthReport report) {
         const string noneDescription = "none";
+        
+        JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings {
+            Formatting = Formatting.Indented,
+            ContractResolver = new CamelCasePropertyNamesContractResolver()
+        };
+        
         context.Response.ContentType = ContentTypes.ApplicationJson;
 
         HealthCheckRes response = new HealthCheckRes() {
@@ -78,7 +85,7 @@ public class Startup {
             Date = DateTime.UtcNow
         };
 
-        string stringResponse = JsonConvert.SerializeObject(response, Formatting.Indented);
+        string stringResponse = JsonConvert.SerializeObject(response, jsonSerializerSettings);
         await context.Response.WriteAsync(stringResponse);
     }
 }

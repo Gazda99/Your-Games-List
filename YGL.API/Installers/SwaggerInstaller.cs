@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
@@ -27,7 +26,6 @@ public class SwaggerInstaller : IInstaller {
                     Array.Empty<string>()
                 }
             });
-            //  c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
         });
     }
 }

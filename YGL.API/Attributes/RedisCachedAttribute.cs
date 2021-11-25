@@ -14,6 +14,7 @@ using YGL.API.Services;
 using YGL.API.Settings;
 
 namespace YGL.API.Attributes {
+[AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
     private readonly TimeSpan _timeToLiveSeconds;
 
@@ -24,6 +25,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         //before
         RedisCacheSettings cacheSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();
+        Console.WriteLine();
 
         if (!cacheSettings.Enabled) {
             await next();
@@ -51,11 +53,12 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
 
         ActionExecutedContext executedContext = await next();
 
+        //after
         ObjectResult response = (ObjectResult)executedContext.Result;
         object responseBody = response.Value;
 
-        //after
-        if (CheckStatusCode(executedContext.HttpContext.Response.StatusCode)) {
+
+        if (CheckStatusCode(response.StatusCode)) {
             try {
                 await cacheService.SetCachedResponseAsync(cacheKey, responseBody, _timeToLiveSeconds);
             }
@@ -75,9 +78,9 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
 
         Dictionary<string, StringValues> queryParams = request.Query
             .ToDictionary(q => q.Key, q => q.Value);
-        
+
         QueryString queryString = request.QueryString;
-        
+
         bool check = false;
         if (request.Query.ContainsKey(skipKey)) {
             int skip = GetValueFromQuery(request.Query, skipKey);
@@ -108,7 +111,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
         return value;
     }
 
-    private static bool CheckStatusCode(int statusCode) {
+    private static bool CheckStatusCode(int? statusCode) {
         const int ok = (int)HttpStatusCode.OK;
         return statusCode == ok;
     }

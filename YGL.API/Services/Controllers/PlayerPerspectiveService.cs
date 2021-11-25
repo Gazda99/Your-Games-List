@@ -8,6 +8,8 @@ using YGL.API.Contracts.V1.Requests.PlayerPerspective;
 using YGL.API.Domain;
 using YGL.API.Errors;
 using YGL.API.SafeObjects;
+using YGL.API.Services.IControllers;
+using YGL.API.Validation;
 
 namespace YGL.API.Services.Controllers {
 public class PlayerPerspectiveService : IPlayerPerspectiveService {
@@ -17,29 +19,33 @@ public class PlayerPerspectiveService : IPlayerPerspectiveService {
         _yglDataContext = yglDataContext;
     }
 
-    public async Task<PlayerPerspectiveResult> GetPlayerPerspective(int perspectiveId) {
+    public async Task<PlayerPerspectiveResult> GetPlayerPerspectives(string perspectiveIds) {
         PlayerPerspectiveResult perspectiveResult = new PlayerPerspectiveResult();
 
-        YGL.Model.PlayerPerspective foundPerspective =
-            await _yglDataContext.PlayerPerspectives.FirstOrDefaultAsync(p =>
-                p.Id == perspectiveId && p.ItemStatus == true);
+        if (!ValidationUrl.TryParseInt(perspectiveIds, perspectiveResult, out List<int> ids)) {
+            perspectiveResult.IsSuccess = false;
+            perspectiveResult.StatusCode = HttpStatusCode.UnprocessableEntity;
+            return perspectiveResult;
+        }
 
-        if (foundPerspective is null) {
+        List<YGL.Model.PlayerPerspective> foundPerspectives =
+            await _yglDataContext.PlayerPerspectives.Where(p => ids.Contains(p.Id)).ToListAsync();
+
+        if (foundPerspectives is null || foundPerspectives.Count == 0) {
             perspectiveResult.IsSuccess = false;
             perspectiveResult.StatusCode = HttpStatusCode.NotFound;
             perspectiveResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.PlayerPerspectiveNotFound);
             return perspectiveResult;
         }
 
-        perspectiveResult.PlayerPerspectives = new List<SafePlayerPerspective>()
-            { new SafePlayerPerspective(foundPerspective) };
+        perspectiveResult.PlayerPerspectives = foundPerspectives.ConvertAll(p => new SafePlayerPerspective(p));
 
         perspectiveResult.IsSuccess = true;
         perspectiveResult.StatusCode = HttpStatusCode.OK;
         return perspectiveResult;
     }
 
-    public async Task<PlayerPerspectiveResult> GetPlayerPerspectives(PlayerPerspectiveFilterQuery platformFilterQuery,
+    public async Task<PlayerPerspectiveResult> GetPlayerPerspectivesFilter(PlayerPerspectiveFilterQuery platformFilterQuery,
         PaginationFilter paginationFilter) {
         PlayerPerspectiveResult perspectiveResult = new PlayerPerspectiveResult();
 
@@ -48,11 +54,17 @@ public class PlayerPerspectiveService : IPlayerPerspectiveService {
 
         perspectivesQueryable = AddFiltersOnQueryGetPlayerPerspectives(platformFilterQuery, perspectivesQueryable);
 
-        List<SafePlayerPerspective> safePlayerPerspectives =
-            (await perspectivesQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take))
-            .ConvertAll(g => new SafePlayerPerspective(g));
+        List<YGL.Model.PlayerPerspective> foundPerspectives =
+            (await perspectivesQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
-        perspectiveResult.PlayerPerspectives = safePlayerPerspectives;
+        if (foundPerspectives is null || foundPerspectives.Count == 0) {
+            perspectiveResult.IsSuccess = false;
+            perspectiveResult.StatusCode = HttpStatusCode.NotFound;
+            perspectiveResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.PlayerPerspectiveNotFound);
+            return perspectiveResult;
+        }
+
+        perspectiveResult.PlayerPerspectives = foundPerspectives.ConvertAll(g => new SafePlayerPerspective(g));
 
         perspectiveResult.IsSuccess = true;
         perspectiveResult.StatusCode = HttpStatusCode.OK;

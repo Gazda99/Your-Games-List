@@ -21,7 +21,7 @@ public static class Routes {
         private const string Base = Root + "/" + Version + "/users";
 
         public const string GetUsers = Base;
-        public const string GetUser = Base + "/{userId:long}";
+        public const string GetUser = Base + "/{userIds}";
         public const string UpdateUser = Base + "/{userId:long}";
         public const string DeleteUser = Base + "/{userId:long}";
 
@@ -35,7 +35,7 @@ public static class Routes {
         private const string Base = Root + "/" + Version + "/companies";
 
         public const string GetCompanies = Base;
-        public const string GetCompany = Base + "/{companyId:int}";
+        public const string GetCompany = Base + "/{companyIds}";
 
         public static string GetLocation(int companyId) {
             return $"{GetCompanies}/{companyId}";
@@ -47,7 +47,7 @@ public static class Routes {
         private const string Base = Root + "/" + Version + "/genres";
 
         public const string GetGenres = Base;
-        public const string GetGenre = Base + "/{genreId:int}";
+        public const string GetGenre = Base + "/{genreIds}";
 
         public static string GetLocation(int genreId) {
             return $"{GetGenres}/{genreId}";
@@ -59,7 +59,7 @@ public static class Routes {
         private const string Base = Root + "/" + Version + "/gameModes";
 
         public const string GetGameModes = Base;
-        public const string GetGameMode = Base + "/{gameModeId:int}";
+        public const string GetGameMode = Base + "/{gameModeIds}";
 
         public static string GetLocation(int gameModeId) {
             return $"{GetGameModes}/{gameModeId}";
@@ -71,7 +71,7 @@ public static class Routes {
         private const string Base = Root + "/" + Version + "/platforms";
 
         public const string GetPlatforms = Base;
-        public const string GetPlatform = Base + "/{platformId:int}";
+        public const string GetPlatform = Base + "/{platformIds}";
 
         public static string GetLocation(int platformId) {
             return $"{GetPlatforms}/{platformId}";
@@ -83,7 +83,7 @@ public static class Routes {
         private const string Base = Root + "/" + Version + "/playerPerspectives";
 
         public const string GetPlayerPerspectives = Base;
-        public const string GetPlayerPerspective = Base + "/{playerPerspectiveId:int}";
+        public const string GetPlayerPerspective = Base + "/{playerPerspectiveIds}";
 
         public static string GetLocation(int playerPerspectiveId) {
             return $"{GetPlayerPerspectives}/{playerPerspectiveId}";

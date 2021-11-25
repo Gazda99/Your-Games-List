@@ -1,11 +1,12 @@
 ﻿using System.Threading.Tasks;
 using YGL.API.Contracts.V1.Requests.Identity;
+using YGL.API.Contracts.V1.Requests.User;
 using YGL.API.Domain;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.IControllers {
 public interface IUserService {
-    public Task<UserResult> GetUser(long userId);
-    public Task<UserResult> GetUsers(UserFilterQuery userFilterQuery, PaginationFilter paginationFilter = null);
+    public Task<UserResult> GetUsers(string userIds);
+    public Task<UserResult> GetUsersFilter(UserFilterQuery userFilterQuery, PaginationFilter paginationFilter = null);
 
     public Task<UserResult> UpdateUser(long userId, UpdateUserReq updateUserReq);
 

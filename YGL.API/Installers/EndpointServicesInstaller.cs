@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using YGL.API.Services.Controllers;
-using YGL.Model;
+using YGL.API.Services.IControllers;
 
 namespace YGL.API.Installers {
 public class EndpointServicesInstaller : IInstaller {
