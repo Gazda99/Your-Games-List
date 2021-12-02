@@ -137,7 +137,14 @@ public partial class IdentityService : IIdentityService {
         await _yglDataContext.UserWithRoles.AddAsync(userWithRole);
         await _yglDataContext.SaveChangesAsync();
 
-        await SendConfirmationEmailAsync(newUser.Id, newUser.Username, newUser.Email);
+        bool isConfirmationEmailSent = await SendConfirmationEmailAsync(newUser.Id, newUser.Username, newUser.Email);
+
+        if (!isConfirmationEmailSent) {
+            authResult.IsSuccess = false;
+            authResult.StatusCode = HttpStatusCode.InternalServerError;
+            authResult.AddErrors<ApiErrors,ApiErrorCodes>(ApiErrorCodes.CouldNotSentEmailConfirmation);
+            return authResult;
+        }
 
         authResult.Location = Routes.User.GetLocation(newUser.Id);
         authResult.IsSuccess = true;
@@ -450,10 +457,9 @@ public partial class IdentityService : IIdentityService {
         await _yglDataContext.SaveChangesAsync();
 
 
-        try {
-            await SendConfirmationEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
-        }
-        catch (Exception ex) {
+        bool isConfirmationEmailSent = await SendConfirmationEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
+
+        if (!isConfirmationEmailSent) {
             emailConfirmationResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes
                 .CouldNotSentEmailConfirmation);
             emailConfirmationResult.IsSuccess = false;
@@ -497,10 +503,9 @@ public partial class IdentityService : IIdentityService {
         await _yglDataContext.SaveChangesAsync();
 
 
-        try {
-            await SendResetPasswordEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
-        }
-        catch (Exception ex) {
+        bool isResetPasswordEmailSent = await SendResetPasswordEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
+
+        if (!isResetPasswordEmailSent) {
             passwordResetResult.IsSuccess = false;
             passwordResetResult.StatusCode = HttpStatusCode.InternalServerError;
             passwordResetResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.CouldNotSentResetPasswordEmail);

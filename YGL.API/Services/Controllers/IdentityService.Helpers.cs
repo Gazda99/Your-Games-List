@@ -6,7 +6,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.IdentityModel.Tokens;
 using YGL.API.EnumTypes;
-using YGL.API.Errors;
+using YGL.API.Exceptions;
 using YGL.API.Helpers;
 
 namespace YGL.API.Services.Controllers {
@@ -52,16 +52,14 @@ public partial class IdentityService {
     }
 
 
-    private async Task SendConfirmationEmailAsync(long userId, string username, string email) {
+    private async Task<bool> SendConfirmationEmailAsync(long userId, string username, string email) {
         string confirmationUrl;
         try {
-            confirmationUrl =
-                await _accountConfirmationEmailSender.SendEmailAndGetUrlAsync(username, email, userId);
+            confirmationUrl = await _accountConfirmationEmailSender.SendEmailAndGetUrlAsync(username, email, userId);
         }
-        catch (Exception ex) {
-            throw;
+        catch (CannotSendEmailException) {
+            return false;
         }
-
 
         YGL.Model.EmailConfirmation emailConfirmation = new YGL.Model.EmailConfirmation() {
             Url = confirmationUrl,
@@ -72,18 +70,18 @@ public partial class IdentityService {
 
         await _yglDataContext.EmailConfirmations.AddAsync(emailConfirmation);
         await _yglDataContext.SaveChangesAsync();
+        
+        return true;
     }
 
-    private async Task SendResetPasswordEmailAsync(long userId, string username, string email) {
+    private async Task<bool> SendResetPasswordEmailAsync(long userId, string username, string email) {
         string confirmationUrl;
-
         try {
             confirmationUrl =
-                await _passwordResetEmailSender.SendEmailAndGetUrlAsync(
-                    username, email, userId);
+                await _passwordResetEmailSender.SendEmailAndGetUrlAsync(username, email, userId);
         }
-        catch (Exception ex) {
-            throw;
+        catch (CannotSendEmailException) {
+            return false;
         }
 
         YGL.Model.PasswordReset passwordReset = new YGL.Model.PasswordReset() {
@@ -95,6 +93,8 @@ public partial class IdentityService {
 
         await _yglDataContext.PasswordResets.AddAsync(passwordReset);
         await _yglDataContext.SaveChangesAsync();
+
+        return true;
     }
 
     private static string GenerateResetPasswordToken() {

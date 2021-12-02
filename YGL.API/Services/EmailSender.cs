@@ -1,6 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using MailKit.Net.Smtp;
 using MimeKit;
+using YGL.API.Exceptions;
 using YGL.API.Settings;
 
 namespace YGL.API.Services {
@@ -26,25 +28,30 @@ public abstract class EmailSender<T> {
     }
 
     public async Task<string> SendEmailAndGetUrlAsync(string toName, string toAddress, long userId) {
-        MimeMessage message = new MimeMessage();
-        message.From.Add(new MailboxAddress(_fromName, _fromAddress));
-        message.To.Add(new MailboxAddress(toName, toAddress));
-        message.Subject = Subject(toName);
+        try {
+            MimeMessage message = new MimeMessage();
+            message.From.Add(new MailboxAddress(_fromName, _fromAddress));
+            message.To.Add(new MailboxAddress(toName, toAddress));
+            message.Subject = Subject(toName);
 
-        string pureUrl = GenerateUrl(RandomUrlSize);
-        string urlWithUserId = $"{userId}_{pureUrl}";
+            string pureUrl = GenerateUrl(RandomUrlSize);
+            string urlWithUserId = $"{userId.ToString()}_{pureUrl}";
 
-        message.Body = new TextPart(BodySubType) { Text = Body(toName, urlWithUserId) };
+            message.Body = new TextPart(BodySubType) { Text = Body(toName, urlWithUserId) };
 
-        using SmtpClient client = new SmtpClient();
-        await client.ConnectAsync(_host, _port, UseSsl);
+            using SmtpClient client = new SmtpClient();
+            await client.ConnectAsync(_host, _port, UseSsl);
 
-        // Note: only needed if the SMTP server requires authentication
-        await client.AuthenticateAsync(_username, _password);
+            // Note: only needed if the SMTP server requires authentication
+            await client.AuthenticateAsync(_username, _password);
 
-        await client.SendAsync(message);
-        await client.DisconnectAsync(true);
-        return pureUrl;
+            await client.SendAsync(message);
+            await client.DisconnectAsync(true);
+            return pureUrl;
+        }
+        catch (MailKit.Security.AuthenticationException) {
+            throw new CannotSendEmailException();
+        }
     }
 
     protected abstract string Subject(string toName);
