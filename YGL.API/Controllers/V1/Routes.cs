@@ -26,7 +26,7 @@ public static class Routes {
         public const string DeleteUser = Base + "/{userId:long}";
 
         public static string GetLocation(long userId) {
-            return $"{GetUsers}/{userId}";
+            return $"{GetUsers}/{userId.ToString()}";
         }
     }
 
@@ -38,7 +38,7 @@ public static class Routes {
         public const string GetCompany = Base + "/{companyIds}";
 
         public static string GetLocation(int companyId) {
-            return $"{GetCompanies}/{companyId}";
+            return $"{GetCompanies}/{companyId.ToString()}";
         }
     }
 
@@ -50,7 +50,7 @@ public static class Routes {
         public const string GetGenre = Base + "/{genreIds}";
 
         public static string GetLocation(int genreId) {
-            return $"{GetGenres}/{genreId}";
+            return $"{GetGenres}/{genreId.ToString()}";
         }
     }
 
@@ -62,7 +62,7 @@ public static class Routes {
         public const string GetGameMode = Base + "/{gameModeIds}";
 
         public static string GetLocation(int gameModeId) {
-            return $"{GetGameModes}/{gameModeId}";
+            return $"{GetGameModes}/{gameModeId.ToString()}";
         }
     }
 
@@ -74,7 +74,7 @@ public static class Routes {
         public const string GetPlatform = Base + "/{platformIds}";
 
         public static string GetLocation(int platformId) {
-            return $"{GetPlatforms}/{platformId}";
+            return $"{GetPlatforms}/{platformId.ToString()}";
         }
     }
 
@@ -86,7 +86,7 @@ public static class Routes {
         public const string GetPlayerPerspective = Base + "/{playerPerspectiveIds}";
 
         public static string GetLocation(int playerPerspectiveId) {
-            return $"{GetPlayerPerspectives}/{playerPerspectiveId}";
+            return $"{GetPlayerPerspectives}/{playerPerspectiveId.ToString()}";
         }
     }
 }

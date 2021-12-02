@@ -156,6 +156,11 @@ public class UserService : IUserService {
         if (!String.IsNullOrEmpty(filterQuery.Username))
             queryable = queryable.Where(u => u.Username.Contains(filterQuery.Username));
 
+        if (filterQuery.ShowInactive == true)
+            return queryable;
+
+        queryable = queryable.Where(u => u.ItemStatus == true);
+
         return queryable;
     }
 }

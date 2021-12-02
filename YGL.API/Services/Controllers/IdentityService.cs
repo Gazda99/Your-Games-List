@@ -658,9 +658,6 @@ public partial class IdentityService : IIdentityService {
 
             YGL.Model.User user = passwordReset2Found.User;
 
-            Debug.WriteLine($"Hash length {hashedPassword.Length}");
-            Debug.WriteLine($"Salt length {salt.Length}");
-
             user.HashedPassword = hashedPassword;
             user.Salt = salt;
 

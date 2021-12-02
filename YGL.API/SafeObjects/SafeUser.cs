@@ -16,7 +16,7 @@ public class SafeUser {
 
     public bool ItemStatus { get; set; }
 
-    public IEnumerable<long> ListOfGames { get; set; }
+    public IEnumerable<long> ListsOfGames { get; set; }
     public IEnumerable<long> Groups { get; set; }
     public IEnumerable<long> Friends { get; set; }
 
@@ -33,7 +33,7 @@ public class SafeUser {
         this.Experience = user.Experience;
         this.ItemStatus = (bool)user.ItemStatus;
 
-        this.ListOfGames = user.ListOfGames.Select(l => l.Id);
+        this.ListsOfGames = user.ListOfGames.Select(l => l.Id);
         this.Groups = user.Groups.Select(l => l.Id);
         
         this.Friends = user.FriendFriendOnes
