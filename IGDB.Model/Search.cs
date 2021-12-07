@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class Search : IHasChecksum {
     public string AlternativeName { get; set; }
     public IdentityOrValue<Character> Character { get; set; }
@@ -13,5 +14,4 @@ public class Search : IHasChecksum {
     public IdentityOrValue<Platform> Platform { get; set; }
     public DateTimeOffset? PublishedAt { get; set; }
     public IdentityOrValue<Theme> Theme { get; set; }
-}
 }

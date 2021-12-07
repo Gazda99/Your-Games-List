@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -12,11 +13,11 @@ using Microsoft.Extensions.Hosting;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using YGL.API.Contracts;
-using YGL.API.Controllers.V1;
 using YGL.API.HealthChecks;
 using YGL.API.Installers;
 
-namespace YGL.API {
+namespace YGL.API;
+
 public class Startup {
     private const string ApiSwaggerName = "YGLApi v1";
     private const string CorsPolicy = "AllowAll";
@@ -31,7 +32,7 @@ public class Startup {
 
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services) {
-        ServicesInstaller servicesInstaller = new ServicesInstaller();
+        var servicesInstaller = new ServicesInstaller();
         servicesInstaller.InstallServicesInOrder(services, Configuration);
         services.AddControllers();
     }
@@ -65,15 +66,15 @@ public class Startup {
 
     private async Task HealthCheckResponseWriter(HttpContext context, HealthReport report) {
         const string noneDescription = "none";
-        
-        JsonSerializerSettings jsonSerializerSettings = new JsonSerializerSettings {
+
+        var jsonSerializerSettings = new JsonSerializerSettings {
             Formatting = Formatting.Indented,
             ContractResolver = new CamelCasePropertyNamesContractResolver()
         };
-        
+
         context.Response.ContentType = ContentTypes.ApplicationJson;
 
-        HealthCheckRes response = new HealthCheckRes() {
+        var response = new HealthCheckRes() {
             Status = report.Status.ToString(),
             Checks = report.Entries
                 .Select(e => new HealthCheck() {
@@ -85,8 +86,7 @@ public class Startup {
             Date = DateTime.UtcNow
         };
 
-        string stringResponse = JsonConvert.SerializeObject(response, jsonSerializerSettings);
+        var stringResponse = JsonConvert.SerializeObject(response, jsonSerializerSettings);
         await context.Response.WriteAsync(stringResponse);
     }
-}
 }

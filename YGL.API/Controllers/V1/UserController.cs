@@ -14,7 +14,8 @@ using YGL.API.EnumTypes;
 using YGL.API.Services.IControllers;
 
 
-namespace YGL.API.Controllers.V1 {
+namespace YGL.API.Controllers.V1;
+
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class UserController : ControllerBase {
     private readonly IUserService _userService;
@@ -107,5 +108,4 @@ public class UserController : ControllerBase {
 
         return this.ReturnResult(userResult.StatusCode, res);
     }
-}
 }

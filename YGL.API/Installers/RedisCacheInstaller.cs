@@ -4,10 +4,11 @@ using StackExchange.Redis;
 using YGL.API.Services;
 using YGL.API.Settings;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class RedisCacheInstaller : IInstaller {
     public void InstallServices(IServiceCollection services, IConfiguration configuration) {
-        RedisCacheSettings redisCacheSettings = new RedisCacheSettings();
+        var redisCacheSettings = new RedisCacheSettings();
         configuration.Bind(nameof(redisCacheSettings), redisCacheSettings);
         services.AddSingleton(redisCacheSettings);
 
@@ -20,5 +21,4 @@ public class RedisCacheInstaller : IInstaller {
         services.AddStackExchangeRedisCache(options => options.Configuration = redisCacheSettings.ConnectionString);
         services.AddSingleton<IRedisCacheService, RedisCacheService>();
     }
-}
 }

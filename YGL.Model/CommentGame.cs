@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     [Table("CommentGame")]
@@ -17,6 +15,7 @@ namespace YGL.Model
         public int GameId { get; set; }
         [Required]
         [StringLength(2000)]
+        [Unicode(false)]
         public string Comment { get; set; }
         public int Likes { get; set; }
         public int Dislikes { get; set; }

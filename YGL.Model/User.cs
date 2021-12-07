@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     [Table("User")]
@@ -32,9 +30,11 @@ namespace YGL.Model
         public long Id { get; set; }
         [Required]
         [StringLength(50)]
+        [Unicode(false)]
         public string Username { get; set; }
         [Required]
         [StringLength(255)]
+        [Unicode(false)]
         public string Email { get; set; }
         [Required]
         [MaxLength(32)]
@@ -49,8 +49,10 @@ namespace YGL.Model
         public DateTime CreatedAt { get; set; }
         [Required]
         [StringLength(2000)]
+        [Unicode(false)]
         public string About { get; set; }
         [StringLength(50)]
+        [Unicode(false)]
         public string Slug { get; set; }
         public short Rank { get; set; }
         public int Experience { get; set; }

@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class CompanyLogo : IIdentifier, IHasChecksum {
     public bool? AlphaChannel { get; set; }
     public bool? Animated { get; set; }
@@ -8,5 +9,4 @@ public class CompanyLogo : IIdentifier, IHasChecksum {
     public string ImageId { get; set; }
     public string Url { get; set; }
     public int? Width { get; set; }
-}
 }

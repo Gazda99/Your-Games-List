@@ -11,7 +11,8 @@ using YGL.API.Contracts.V1.Responses.Platform;
 using YGL.API.Domain;
 using YGL.API.Services.IControllers;
 
-namespace YGL.API.Controllers.V1 {
+namespace YGL.API.Controllers.V1; 
+
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class PlatformController : ControllerBase {
     private readonly IPlatformService _platformService;
@@ -26,8 +27,7 @@ public class PlatformController : ControllerBase {
     public async Task<IActionResult> GetPlatforms(string platformIds) {
         IResponse res;
 
-        PlatformResult platformResult =
-            await _platformService.GetPlatforms(platformIds);
+        PlatformResult platformResult = await _platformService.GetPlatforms(platformIds);
 
         if (platformResult.IsSuccess) {
             res = platformResult.Platforms
@@ -70,5 +70,4 @@ public class PlatformController : ControllerBase {
 
         return this.ReturnResult(platformResult.StatusCode, res);
     }
-}
 }

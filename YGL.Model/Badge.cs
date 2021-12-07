@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     [Table("Badge")]
@@ -20,9 +18,11 @@ namespace YGL.Model
         public int Id { get; set; }
         [Required]
         [StringLength(255)]
+        [Unicode(false)]
         public string Name { get; set; }
         [Required]
         [StringLength(1500)]
+        [Unicode(false)]
         public string Description { get; set; }
         public byte Rarity { get; set; }
         [Required]

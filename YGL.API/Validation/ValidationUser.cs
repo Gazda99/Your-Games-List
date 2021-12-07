@@ -1,11 +1,11 @@
 ﻿using System;
-using System.Collections.Immutable;
 using System.Text.RegularExpressions;
 using YGL.API.EnumTypes;
 using YGL.API.Errors;
 using YGL.API.Helpers;
 
-namespace YGL.API.Validation {
+namespace YGL.API.Validation; 
+
 public static class ValidationUser {
     private const int PasswordMinLength = 8;
     private const int PasswordMaxLength = 128;
@@ -35,7 +35,7 @@ public static class ValidationUser {
 
         try {
             System.Net.Mail.MailAddress mailAddress = new System.Net.Mail.MailAddress(email);
-            bool check = mailAddress.Address == email;
+            var check = mailAddress.Address == email;
 
             if (!check)
                 errorList.AddErrors<ApiErrors, ApiErrorCodes>(
@@ -154,5 +154,4 @@ public static class ValidationUser {
 
         return true;
     }
-}
 }

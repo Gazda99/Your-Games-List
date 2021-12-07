@@ -1,4 +1,5 @@
-﻿namespace YGL.API.SafeObjects {
+﻿namespace YGL.API.SafeObjects; 
+
 public class SafeGameMode {
     public int Id { get; set; }
     public string Name { get; set; }
@@ -7,5 +8,4 @@ public class SafeGameMode {
         this.Id = gameMode.Id;
         this.Name = gameMode.Name;
     }
-}
 }

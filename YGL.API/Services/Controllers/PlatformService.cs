@@ -11,7 +11,8 @@ using YGL.API.SafeObjects;
 using YGL.API.Services.IControllers;
 using YGL.API.Validation;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public class PlatformService : IPlatformService {
     private readonly YGL.Model.YGLDataContext _yglDataContext;
 
@@ -20,7 +21,7 @@ public class PlatformService : IPlatformService {
     }
 
     public async Task<PlatformResult> GetPlatforms(string platformIds) {
-        PlatformResult platformResult = new PlatformResult();
+        var platformResult = new PlatformResult();
 
         if (!ValidationUrl.TryParseInt(platformIds, platformResult, out List<int> ids)) {
             platformResult.IsSuccess = false;
@@ -28,7 +29,7 @@ public class PlatformService : IPlatformService {
             return platformResult;
         }
 
-        List<YGL.Model.Platform> foundPlatforms = await _yglDataContext.Platforms.Where(p => ids.Contains(p.Id)).ToListAsync();
+        var foundPlatforms = await _yglDataContext.Platforms.Where(p => ids.Contains(p.Id)).ToListAsync();
 
 
         if (foundPlatforms is null || foundPlatforms.Count == 0) {
@@ -47,15 +48,13 @@ public class PlatformService : IPlatformService {
 
     public async Task<PlatformResult> GetPlatformsFilter(PlatformFilterQuery platformFilterQuery,
         PaginationFilter paginationFilter) {
-        PlatformResult platformResult = new PlatformResult();
+        var platformResult = new PlatformResult();
 
-        IQueryable<YGL.Model.Platform> platformQueryable = _yglDataContext.Platforms
-            .Where(p => p.ItemStatus == true);
+        var platformQueryable = _yglDataContext.Platforms.Where(p => p.ItemStatus == true);
 
         platformQueryable = AddFiltersOnQueryGetPlatforms(platformFilterQuery, platformQueryable);
 
-        List<YGL.Model.Platform> foundPlatforms =
-            (await platformQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
+        var foundPlatforms = (await platformQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
         if (foundPlatforms is null || foundPlatforms.Count == 0) {
             platformResult.IsSuccess = false;
@@ -80,5 +79,4 @@ public class PlatformService : IPlatformService {
 
         return queryable;
     }
-}
 }

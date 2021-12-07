@@ -17,7 +17,8 @@ using YGL.API.Services.IControllers;
 using YGL.API.Settings;
 using YGL.API.Validation;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public partial class IdentityService : IIdentityService {
     private const int RefreshTokenSize = 64;
     private const int ResetPasswordTokenSize = 64;
@@ -57,7 +58,7 @@ public partial class IdentityService : IIdentityService {
 
     public async Task<AuthenticationResult> RegisterAsync(
         string email, string username, string password) {
-        AuthenticationResult authResult = new AuthenticationResult();
+        var authResult = new AuthenticationResult();
 
         if (!ValidationUser.ValidateUsername(username, authResult)) {
             authResult.IsSuccess = false;
@@ -86,8 +87,7 @@ public partial class IdentityService : IIdentityService {
 
 
         //check if username is taken
-        YGL.Model.User foundUser =
-            await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.ItemStatus == true);
+        var foundUser = await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Username == username && u.ItemStatus == true);
 
         if (foundUser is not null) {
             authResult.IsSuccess = false;
@@ -137,12 +137,12 @@ public partial class IdentityService : IIdentityService {
         await _yglDataContext.UserWithRoles.AddAsync(userWithRole);
         await _yglDataContext.SaveChangesAsync();
 
-        bool isConfirmationEmailSent = await SendConfirmationEmailAsync(newUser.Id, newUser.Username, newUser.Email);
+        var isConfirmationEmailSent = await SendConfirmationEmailAsync(newUser.Id, newUser.Username, newUser.Email);
 
         if (!isConfirmationEmailSent) {
             authResult.IsSuccess = false;
             authResult.StatusCode = HttpStatusCode.InternalServerError;
-            authResult.AddErrors<ApiErrors,ApiErrorCodes>(ApiErrorCodes.CouldNotSentEmailConfirmation);
+            authResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.CouldNotSentEmailConfirmation);
             return authResult;
         }
 
@@ -154,7 +154,7 @@ public partial class IdentityService : IIdentityService {
 
 
     public async Task<AuthenticationResult> LoginAsync(string username, string password) {
-        AuthenticationResult authResult = new AuthenticationResult();
+        var authResult = new AuthenticationResult();
 
         if (!ValidationUser.ValidateUsername(username, authResult)) {
             authResult.IsSuccess = false;
@@ -168,7 +168,7 @@ public partial class IdentityService : IIdentityService {
             return authResult;
         }
 
-        YGL.Model.User foundUser = await _yglDataContext.Users
+        var foundUser = await _yglDataContext.Users
             .Include(e => e.UserWithRoles)
             .FirstOrDefaultAsync(u => u.Username == username && u.ItemStatus == true);
 
@@ -188,7 +188,7 @@ public partial class IdentityService : IIdentityService {
         }
 
 
-        bool isPasswordCorrect =
+        var isPasswordCorrect =
             _customPasswordHasher.VerifyPassword(password, foundUser.HashedPassword, foundUser.Salt);
 
         if (!isPasswordCorrect) {
@@ -198,11 +198,11 @@ public partial class IdentityService : IIdentityService {
             return authResult;
         }
 
-        List<YGL.Model.RefreshToken> tokensToRevoke =
+        var tokensToRevoke =
             await _yglDataContext.RefreshTokens.Where(t =>
                 t.UserId == foundUser.Id && t.IsRevoked == false && t.IsUsed == false).ToListAsync();
 
-        foreach (YGL.Model.RefreshToken tokenToRevoke in tokensToRevoke) {
+        foreach (var tokenToRevoke in tokensToRevoke) {
             tokenToRevoke.IsRevoked = true;
             _yglDataContext.RefreshTokens.Update(tokenToRevoke);
         }
@@ -226,11 +226,11 @@ public partial class IdentityService : IIdentityService {
     }
 
     private async Task<AuthenticationResult> GenerateTokens(YGL.Model.User user) {
-        SymmetricSecurityKey mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret));
+        var mySecurityKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(_jwtSettings.Secret));
 
-        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JwtSecurityTokenHandler();
 
-        SecurityTokenDescriptor tokenDescriptor = new SecurityTokenDescriptor {
+        var tokenDescriptor = new SecurityTokenDescriptor {
             Subject = new ClaimsIdentity(CreateClaims(user)),
             Expires = DateTime.UtcNow.AddSeconds(_jwtSettings.TokenLifeTime),
             SigningCredentials = new SigningCredentials(mySecurityKey, _jwtSettings.SecurityAlgorithm)
@@ -238,7 +238,7 @@ public partial class IdentityService : IIdentityService {
 
         SecurityToken jwtToken = tokenHandler.CreateToken(tokenDescriptor);
 
-        YGL.Model.RefreshToken refreshToken = new YGL.Model.RefreshToken() {
+        var refreshToken = new YGL.Model.RefreshToken() {
             JwtId = jwtToken.Id,
             IsUsed = false,
             IsRevoked = false,
@@ -262,9 +262,9 @@ public partial class IdentityService : IIdentityService {
 
 
     private async Task<AuthenticationResult> VerifyAndGenerateTokens(string jwtToken, string refreshToken) {
-        AuthenticationResult authResult = new AuthenticationResult();
+        var authResult = new AuthenticationResult();
 
-        JwtSecurityTokenHandler tokenHandler = new JwtSecurityTokenHandler();
+        var tokenHandler = new JwtSecurityTokenHandler();
 
         try {
             //validate token (without checking expiration time)
@@ -278,7 +278,7 @@ public partial class IdentityService : IIdentityService {
                 return ReturnTokenValidationError(ApiErrorCodes.JwtTokenNotYetExpired);
 
             //get refresh token from DB
-            YGL.Model.RefreshToken storedRefreshToken =
+            var storedRefreshToken =
                 await _yglDataContext.RefreshTokens.FirstOrDefaultAsync(t => t.Token == refreshToken);
 
             if (storedRefreshToken is null)
@@ -306,10 +306,9 @@ public partial class IdentityService : IIdentityService {
             await _yglDataContext.SaveChangesAsync();
 
             //find user based on provided token
-            YGL.Model.User foundUser =
-                await _yglDataContext.Users
-                    .Include(e => e.UserWithRoles)
-                    .FirstOrDefaultAsync(u => u.Id == storedRefreshToken.UserId && u.ItemStatus == true);
+            var foundUser = await _yglDataContext.Users
+                .Include(e => e.UserWithRoles)
+                .FirstOrDefaultAsync(u => u.Id == storedRefreshToken.UserId && u.ItemStatus == true);
 
             //generate new token for that user
             AuthenticationResult generateTokenResult = await GenerateTokens(foundUser);
@@ -331,7 +330,7 @@ public partial class IdentityService : IIdentityService {
     }
 
     public async Task<EmailConfirmationResult> ConfirmEmailAsync(string url) {
-        EmailConfirmationResult emailConfirmationResult = new EmailConfirmationResult();
+        var emailConfirmationResult = new EmailConfirmationResult();
 
         if (String.IsNullOrEmpty(url)) {
             emailConfirmationResult.IsSuccess = false;
@@ -356,7 +355,7 @@ public partial class IdentityService : IIdentityService {
             return emailConfirmationResult;
         }
 
-        YGL.Model.User foundUser = _yglDataContext.Users.FirstOrDefault(u => u.Id == userId && u.ItemStatus == true);
+        var foundUser = _yglDataContext.Users.FirstOrDefault(u => u.Id == userId && u.ItemStatus == true);
 
         if (foundUser is null) {
             emailConfirmationResult.IsSuccess = false;
@@ -374,11 +373,11 @@ public partial class IdentityService : IIdentityService {
             return emailConfirmationResult;
         }
 
-        List<YGL.Model.EmailConfirmation> emailConfirmations = await _yglDataContext.EmailConfirmations
+        var emailConfirmations = await _yglDataContext.EmailConfirmations
             .Where(e => e.UserId == userId && e.IsUsed == false)
             .ToListAsync();
 
-        foreach (YGL.Model.EmailConfirmation emailConfirmation in emailConfirmations) {
+        foreach (var emailConfirmation in emailConfirmations) {
             //check if url is the same
             if (emailConfirmation.Url != urlSplit[1]) continue;
 
@@ -419,7 +418,7 @@ public partial class IdentityService : IIdentityService {
 
 
     public async Task<EmailConfirmationResult> ResendConfirmationEmailAsync(string email) {
-        EmailConfirmationResult emailConfirmationResult = new EmailConfirmationResult();
+        var emailConfirmationResult = new EmailConfirmationResult();
 
         if (!ValidationUser.ValidateEmail(email, emailConfirmationResult)) {
             emailConfirmationResult.IsSuccess = false;
@@ -427,7 +426,7 @@ public partial class IdentityService : IIdentityService {
             return emailConfirmationResult;
         }
 
-        YGL.Model.User foundUser = _yglDataContext.Users.FirstOrDefault(u => u.Email == email && u.ItemStatus == true);
+        var foundUser = _yglDataContext.Users.FirstOrDefault(u => u.Email == email && u.ItemStatus == true);
 
         if (foundUser is null) {
             emailConfirmationResult.IsSuccess = false;
@@ -445,11 +444,11 @@ public partial class IdentityService : IIdentityService {
             return emailConfirmationResult;
         }
 
-        List<YGL.Model.EmailConfirmation> emailConfirmations = await _yglDataContext.EmailConfirmations
+        var emailConfirmations = await _yglDataContext.EmailConfirmations
             .Where(e => e.UserId == foundUser.Id && e.IsUsed == false)
             .ToListAsync();
 
-        foreach (YGL.Model.EmailConfirmation emailConfirmation in emailConfirmations) {
+        foreach (var emailConfirmation in emailConfirmations) {
             emailConfirmation.IsUsed = true;
         }
 
@@ -457,7 +456,7 @@ public partial class IdentityService : IIdentityService {
         await _yglDataContext.SaveChangesAsync();
 
 
-        bool isConfirmationEmailSent = await SendConfirmationEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
+        var isConfirmationEmailSent = await SendConfirmationEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
 
         if (!isConfirmationEmailSent) {
             emailConfirmationResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes
@@ -473,7 +472,7 @@ public partial class IdentityService : IIdentityService {
     }
 
     public async Task<PasswordResetResult> SendResetPasswordEmailAsync(string email) {
-        PasswordResetResult passwordResetResult = new PasswordResetResult();
+        var passwordResetResult = new PasswordResetResult();
 
         if (!ValidationUser.ValidateEmail(email, passwordResetResult)) {
             passwordResetResult.IsSuccess = false;
@@ -481,8 +480,7 @@ public partial class IdentityService : IIdentityService {
             return passwordResetResult;
         }
 
-        YGL.Model.User foundUser =
-            await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.ItemStatus == true);
+        var foundUser = await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Email == email && u.ItemStatus == true);
 
         if (foundUser is null) {
             passwordResetResult.IsSuccess = false;
@@ -491,11 +489,11 @@ public partial class IdentityService : IIdentityService {
             return passwordResetResult;
         }
 
-        List<YGL.Model.PasswordReset> passwordResets = await _yglDataContext.PasswordResets
+        var passwordResets = await _yglDataContext.PasswordResets
             .Where(e => e.UserId == foundUser.Id && e.IsUsed == false)
             .ToListAsync();
 
-        foreach (YGL.Model.PasswordReset passwordReset in passwordResets) {
+        foreach (var passwordReset in passwordResets) {
             passwordReset.IsUsed = true;
         }
 
@@ -503,7 +501,7 @@ public partial class IdentityService : IIdentityService {
         await _yglDataContext.SaveChangesAsync();
 
 
-        bool isResetPasswordEmailSent = await SendResetPasswordEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
+        var isResetPasswordEmailSent = await SendResetPasswordEmailAsync(foundUser.Id, foundUser.Username, foundUser.Email);
 
         if (!isResetPasswordEmailSent) {
             passwordResetResult.IsSuccess = false;
@@ -518,7 +516,7 @@ public partial class IdentityService : IIdentityService {
     }
 
     public async Task<PasswordResetResult> ConfirmResetPasswordAsync(string url) {
-        PasswordResetResult passwordResetResult = new PasswordResetResult();
+        var passwordResetResult = new PasswordResetResult();
 
         if (String.IsNullOrEmpty(url)) {
             passwordResetResult.IsSuccess = false;
@@ -541,7 +539,7 @@ public partial class IdentityService : IIdentityService {
             return passwordResetResult;
         }
 
-        YGL.Model.User foundUser = _yglDataContext.Users.FirstOrDefault(u => u.Id == userId && u.ItemStatus == true);
+        var foundUser = _yglDataContext.Users.FirstOrDefault(u => u.Id == userId && u.ItemStatus == true);
 
         if (foundUser is null) {
             passwordResetResult.IsSuccess = false;
@@ -551,12 +549,12 @@ public partial class IdentityService : IIdentityService {
             return passwordResetResult;
         }
 
-        List<YGL.Model.PasswordReset> passwordResets = await _yglDataContext.PasswordResets
+        var passwordResets = await _yglDataContext.PasswordResets
             .Where(p => p.UserId == userId && p.IsUsed == false)
             .ToListAsync();
 
 
-        foreach (YGL.Model.PasswordReset passwordReset in passwordResets) {
+        foreach (var passwordReset in passwordResets) {
             if (passwordReset.Url != urlSplit[1]) continue;
 
             //check if is expired
@@ -580,17 +578,17 @@ public partial class IdentityService : IIdentityService {
 
 
             //clear all other reset tokens
-            List<YGL.Model.PasswordReset2> passwordResets2 = await _yglDataContext.PasswordReset2s
+            var passwordResets2 = await _yglDataContext.PasswordReset2s
                 .Where(p => p.UserId == userId && p.IsUsed == false && p.ItemStatus == true)
                 .ToListAsync();
 
-            foreach (YGL.Model.PasswordReset2 passwordResets2InDb in passwordResets2)
+            foreach (var passwordResets2InDb in passwordResets2)
                 passwordResets2InDb.IsUsed = true;
 
             _yglDataContext.PasswordReset2s.UpdateRange(passwordResets2);
 
 
-            YGL.Model.PasswordReset2 passwordReset2 = new YGL.Model.PasswordReset2() {
+            var passwordReset2 = new YGL.Model.PasswordReset2() {
                 Token = passwordResetToken,
                 UserId = foundUser.Id,
                 ExpiryDate = DateTime.UtcNow.AddSeconds(_passwordResetSettings.TokenLifeTime),
@@ -614,7 +612,7 @@ public partial class IdentityService : IIdentityService {
     }
 
     public async Task<PasswordResetResult> ResetPasswordAsync(string passwordResetToken, string newPassword) {
-        PasswordResetResult passwordResetResult = new PasswordResetResult();
+        var passwordResetResult = new PasswordResetResult();
 
         if (!ValidationUser.ValidatePassword(newPassword, passwordResetResult)) {
             passwordResetResult.IsSuccess = false;
@@ -622,9 +620,8 @@ public partial class IdentityService : IIdentityService {
             return passwordResetResult;
         }
 
-        YGL.Model.PasswordReset2 passwordReset2Found =
-            await _yglDataContext.PasswordReset2s.Include(p => p.User)
-                .FirstOrDefaultAsync(p => p.Token == passwordResetToken && p.IsUsed == false && p.ItemStatus == true);
+        var passwordReset2Found = await _yglDataContext.PasswordReset2s.Include(p => p.User)
+            .FirstOrDefaultAsync(p => p.Token == passwordResetToken && p.IsUsed == false && p.ItemStatus == true);
 
         if (passwordReset2Found is not null) {
             if (passwordReset2Found.ExpiryDate < DateTime.UtcNow) {
@@ -661,7 +658,7 @@ public partial class IdentityService : IIdentityService {
 
             passwordReset2Found.IsUsed = true;
 
-            YGL.Model.User user = passwordReset2Found.User;
+            var user = passwordReset2Found.User;
 
             user.HashedPassword = hashedPassword;
             user.Salt = salt;
@@ -677,9 +674,7 @@ public partial class IdentityService : IIdentityService {
 
         passwordResetResult.IsSuccess = false;
         passwordResetResult.StatusCode = HttpStatusCode.Unauthorized;
-        passwordResetResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes
-            .PasswordResetTokenNotValid);
+        passwordResetResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.PasswordResetTokenNotValid);
         return passwordResetResult;
     }
-}
 }

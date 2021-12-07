@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class AgeRating : IIdentifier, IHasChecksum {
     public AgeRatingCategory? Category { get; set; }
     public string Checksum { get; set; }
@@ -58,5 +59,4 @@ public enum AgeRatingTitle {
     ACB_MA15 = 36,
     ACB_R18 = 37,
     ACB_RC = 38,
-}
 }

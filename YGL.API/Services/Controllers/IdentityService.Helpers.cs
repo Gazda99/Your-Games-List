@@ -9,11 +9,12 @@ using YGL.API.EnumTypes;
 using YGL.API.Exceptions;
 using YGL.API.Helpers;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public partial class IdentityService {
     private static string GenerateRefreshToken() {
-        byte[] randomBytes = RngHelper.GenerateRandomByteArray(RefreshTokenSize);
-        string refreshToken = Convert.ToBase64String(randomBytes);
+        var randomBytes = RngHelper.GenerateRandomByteArray(RefreshTokenSize);
+        var refreshToken = Convert.ToBase64String(randomBytes);
         return refreshToken;
     }
 
@@ -21,7 +22,7 @@ public partial class IdentityService {
         IEnumerable<Claim> roleClaims =
             user.UserWithRoles.Select(r => new Claim(ClaimTypes.Role, Role.GetRoleValueOrDefault(r.Role)));
 
-        List<Claim> claims = new List<Claim>();
+        var claims = new List<Claim>();
         claims.Add(new Claim("Id", user.Id.ToString()));
         claims.Add(new Claim(JwtRegisteredClaimNames.Email, user.Email));
         claims.Add(new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()));
@@ -37,7 +38,7 @@ public partial class IdentityService {
     }
 
     private static bool IsJwtNotYetExpired(ClaimsPrincipal tokenInVerification) {
-        string jwtExpiryDateString = tokenInVerification.Claims
+        var jwtExpiryDateString = tokenInVerification.Claims
             .FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp)?.Value;
 
         if (String.IsNullOrEmpty(jwtExpiryDateString))
@@ -46,7 +47,7 @@ public partial class IdentityService {
         long utcExpiryDate = Int64.Parse(jwtExpiryDateString);
         Console.WriteLine(utcExpiryDate);
 
-        DateTime expiryDate = DateTime.UnixEpoch.AddSeconds(utcExpiryDate);
+        var expiryDate = DateTime.UnixEpoch.AddSeconds(utcExpiryDate);
 
         return expiryDate > DateTime.UtcNow;
     }
@@ -61,7 +62,7 @@ public partial class IdentityService {
             return false;
         }
 
-        YGL.Model.EmailConfirmation emailConfirmation = new YGL.Model.EmailConfirmation() {
+        var emailConfirmation = new YGL.Model.EmailConfirmation() {
             Url = confirmationUrl,
             ExpiryDate = DateTime.UtcNow.AddSeconds(_confirmationEmailSettings.UrlLifeTime),
             UserId = userId,
@@ -70,7 +71,7 @@ public partial class IdentityService {
 
         await _yglDataContext.EmailConfirmations.AddAsync(emailConfirmation);
         await _yglDataContext.SaveChangesAsync();
-        
+
         return true;
     }
 
@@ -84,7 +85,7 @@ public partial class IdentityService {
             return false;
         }
 
-        YGL.Model.PasswordReset passwordReset = new YGL.Model.PasswordReset() {
+        var passwordReset = new YGL.Model.PasswordReset() {
             Url = confirmationUrl,
             ExpiryDate = DateTime.UtcNow.AddSeconds(_passwordResetEmailSettings.UrlLifeTime),
             UserId = userId,
@@ -98,9 +99,8 @@ public partial class IdentityService {
     }
 
     private static string GenerateResetPasswordToken() {
-        byte[] randomBytes = RngHelper.GenerateRandomByteArray(ResetPasswordTokenSize);
-        string refreshToken = Convert.ToBase64String(randomBytes);
+        var randomBytes = RngHelper.GenerateRandomByteArray(ResetPasswordTokenSize);
+        var refreshToken = Convert.ToBase64String(randomBytes);
         return refreshToken;
     }
-}
 }

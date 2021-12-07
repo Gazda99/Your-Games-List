@@ -11,7 +11,8 @@ using YGL.API.SafeObjects;
 using YGL.API.Services.IControllers;
 using YGL.API.Validation;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public class GenreService : IGenreService {
     private readonly YGL.Model.YGLDataContext _yglDataContext;
 
@@ -20,7 +21,7 @@ public class GenreService : IGenreService {
     }
 
     public async Task<GenreResult> GetGenres(string genreIds) {
-        GenreResult genreResult = new GenreResult();
+        var genreResult = new GenreResult();
 
         if (!ValidationUrl.TryParseInt(genreIds, genreResult, out List<int> ids)) {
             genreResult.IsSuccess = false;
@@ -28,7 +29,7 @@ public class GenreService : IGenreService {
             return genreResult;
         }
 
-        List<YGL.Model.Genre> foundGenres = await _yglDataContext.Genres.Where(g => ids.Contains(g.Id)).ToListAsync();
+        var foundGenres = await _yglDataContext.Genres.Where(g => ids.Contains(g.Id)).ToListAsync();
 
         if (foundGenres is null || foundGenres.Count == 0) {
             genreResult.IsSuccess = false;
@@ -45,15 +46,13 @@ public class GenreService : IGenreService {
     }
 
     public async Task<GenreResult> GetGenresFilter(GenreFilterQuery genreFilterQuery, PaginationFilter paginationFilter) {
-        GenreResult genreResult = new GenreResult();
+        var genreResult = new GenreResult();
 
-        IQueryable<YGL.Model.Genre> genreQueryable = _yglDataContext.Genres
-            .Where(g => g.ItemStatus == true);
+        var genreQueryable = _yglDataContext.Genres.Where(g => g.ItemStatus == true);
 
         genreQueryable = AddFiltersOnQueryGetGenres(genreFilterQuery, genreQueryable);
 
-        List<YGL.Model.Genre> foundGenres =
-            (await genreQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
+        var foundGenres = (await genreQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
         if (foundGenres is null || foundGenres.Count == 0) {
             genreResult.IsSuccess = false;
@@ -78,5 +77,4 @@ public class GenreService : IGenreService {
 
         return queryable;
     }
-}
 }

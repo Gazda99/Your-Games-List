@@ -3,7 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using YGL.API.HealthChecks;
 using YGL.Model;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class HealthChecksInstaller : IInstaller {
     private const string YGLDBHealtCheckName = "YGLDB";
     private const string RedisHealthCheckName = "Redis";
@@ -13,5 +14,4 @@ public class HealthChecksInstaller : IInstaller {
             .AddDbContextCheck<YGLDataContext>(YGLDBHealtCheckName)
             .AddCheck<RedisHealthCheck>(RedisHealthCheckName);
     }
-}
 }

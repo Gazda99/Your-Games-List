@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class PlatformWebsite : IIdentifier, IHasChecksum {
     public PlatformWebsiteCategory? Category { get; set; }
     public string Checksum { get; set; }
@@ -27,5 +28,4 @@ public enum PlatformWebsiteCategory {
     LinkedIn = 18,
     Pinterest = 19,
     SoundCloud = 20
-}
 }

@@ -1,4 +1,5 @@
-﻿namespace YGL.API.Settings {
+﻿namespace YGL.API.Settings; 
+
 public interface IEmailSettings {
     public string Name { get; set; }
     public string Address { get; set; }
@@ -7,5 +8,4 @@ public interface IEmailSettings {
     public string Host { get; set; }
     public int Port { get; set; }
     public long UrlLifeTime { get; set; }
-}
 }

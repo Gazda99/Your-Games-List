@@ -3,7 +3,8 @@ using System.Net;
 using Microsoft.AspNetCore.Mvc;
 using YGL.API.Contracts.V1.Responses;
 
-namespace YGL.API {
+namespace YGL.API; 
+
 public static class ControllerBaseExtensions {
     private const string RouteNotDefined = "Route not defined";
 
@@ -96,5 +97,4 @@ public class CustomObjectResult : ObjectResult {
     public CustomObjectResult(IResponse value, int statusCode) : base(value) {
         base.StatusCode = statusCode;
     }
-}
 }

@@ -2,7 +2,8 @@
 using System.Net;
 using YGL.API.Errors;
 
-namespace YGL.API.Domain {
+namespace YGL.API.Domain; 
+
 public class AuthenticationResult : IErrorList, IHttpStatusCode {
     public long UserId { get; set; }
     public string JwtToken { get; set; }
@@ -16,5 +17,4 @@ public class AuthenticationResult : IErrorList, IHttpStatusCode {
     public HttpStatusCode StatusCode { get; set; }
 
     public string Location { get; set; }
-}
 }

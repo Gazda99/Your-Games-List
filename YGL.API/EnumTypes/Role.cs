@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.EnumTypes {
+namespace YGL.API.EnumTypes; 
+
 public static class Role {
     public const string User = "User";
     public const string Mod = "Mod";
@@ -47,5 +48,4 @@ public enum Roles {
     User = 0,
     Mod = 5,
     Admin = 9,
-}
 }

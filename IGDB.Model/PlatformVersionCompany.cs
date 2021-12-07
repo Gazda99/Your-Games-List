@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class PlatformVersionCompany : IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
     public string Comment { get; set; }
@@ -6,5 +7,4 @@ public class PlatformVersionCompany : IIdentifier, IHasChecksum {
     public bool? Developer { get; set; }
     public long? Id { get; set; }
     public bool? Manufacturer { get; set; }
-}
 }

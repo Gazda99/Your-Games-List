@@ -11,20 +11,18 @@ using YGL.API.Errors;
 using YGL.API.Services;
 using YGL.API.Settings;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class JwtInstaller : IInstaller {
     public void InstallServices(IServiceCollection services, IConfiguration configuration) {
-        JwtSettings jwtSettings = new JwtSettings();
+        var jwtSettings = new JwtSettings();
         configuration.Bind(nameof(jwtSettings), jwtSettings);
         services.AddSingleton(jwtSettings);
 
-        TokenValidationParametersWithLifetime tokenValidationParametersWithLifetime =
-            new TokenValidationParametersWithLifetime(jwtSettings);
+        var tokenValidationParametersWithLifetime = new TokenValidationParametersWithLifetime(jwtSettings);
 
-        TokenValidationParametersWithoutLifetime tokenValidationParametersWithoutLifetime =
-            new TokenValidationParametersWithoutLifetime(jwtSettings);
-
-
+        var tokenValidationParametersWithoutLifetime = new TokenValidationParametersWithoutLifetime(jwtSettings);
+        
         services.AddSingleton(tokenValidationParametersWithLifetime);
         services.AddSingleton(tokenValidationParametersWithoutLifetime);
 
@@ -45,7 +43,7 @@ public class JwtInstaller : IInstaller {
     }
 
     private Task JwtBearerCustomOnForbidden(ForbiddenContext context) {
-        TokenValidationFailRes tokenValidationFailRes = new TokenValidationFailRes();
+        var tokenValidationFailRes = new TokenValidationFailRes();
 
         tokenValidationFailRes.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.Forbidden);
 
@@ -61,15 +59,14 @@ public class JwtInstaller : IInstaller {
         // Skip the default logic.
         context.HandleResponse();
 
-        TokenValidationFailRes tokenValidationFailRes = new TokenValidationFailRes();
+        var tokenValidationFailRes = new TokenValidationFailRes();
 
         if (context.ErrorDescription is not null && context.ErrorDescription.Contains("The token expired"))
             tokenValidationFailRes.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.JwtTokenExpired);
 
         else
             tokenValidationFailRes.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.JwtTokenValidationError);
-
-
+        
         context.Response.ContentType = ContentTypes.ApplicationJson;
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
         
@@ -77,5 +74,4 @@ public class JwtInstaller : IInstaller {
 
         return context.Response.WriteAsync(JsonConvert.SerializeObject(tokenValidationFailRes));
     }
-}
 }

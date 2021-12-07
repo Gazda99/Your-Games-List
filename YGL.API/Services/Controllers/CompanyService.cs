@@ -11,7 +11,8 @@ using YGL.API.SafeObjects;
 using YGL.API.Services.IControllers;
 using YGL.API.Validation;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public class CompanyService : ICompanyService {
     private readonly YGL.Model.YGLDataContext _yglDataContext;
 
@@ -20,7 +21,7 @@ public class CompanyService : ICompanyService {
     }
 
     public async Task<CompanyResult> GetCompanies(string companyIds) {
-        CompanyResult companyResult = new CompanyResult();
+        var companyResult = new CompanyResult();
 
         if (!ValidationUrl.TryParseInt(companyIds, companyResult, out List<int> ids)) {
             companyResult.IsSuccess = false;
@@ -28,7 +29,7 @@ public class CompanyService : ICompanyService {
             return companyResult;
         }
 
-        List<YGL.Model.Company> foundCompanies = await _yglDataContext.Companies.Where(c => ids.Contains(c.Id)).ToListAsync();
+        var foundCompanies = await _yglDataContext.Companies.Where(c => ids.Contains(c.Id)).ToListAsync();
 
         if (foundCompanies is null || foundCompanies.Count == 0) {
             companyResult.IsSuccess = false;
@@ -37,7 +38,7 @@ public class CompanyService : ICompanyService {
             return companyResult;
         }
 
-        List<SafeCompany> safeCompanies = foundCompanies.ConvertAll(c => new SafeCompany(c));
+        var safeCompanies = foundCompanies.ConvertAll(c => new SafeCompany(c));
 
         companyResult.Companies = safeCompanies;
         companyResult.IsSuccess = true;
@@ -47,14 +48,13 @@ public class CompanyService : ICompanyService {
 
     public async Task<CompanyResult> GetCompaniesFilter(CompanyFilterQuery companyFilterQuery,
         PaginationFilter paginationFilter) {
-        CompanyResult companyResult = new CompanyResult();
+        var companyResult = new CompanyResult();
 
-        IQueryable<YGL.Model.Company> companyQueryable = _yglDataContext.Companies
-            .Where(u => u.ItemStatus == true);
+        var companyQueryable = _yglDataContext.Companies.Where(u => u.ItemStatus == true);
 
         companyQueryable = AddFiltersOnQueryGetCompanies(companyFilterQuery, companyQueryable);
 
-        List<YGL.Model.Company> foundCompanies =
+        var foundCompanies =
             (await companyQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
         if (foundCompanies is null || foundCompanies.Count == 0) {
@@ -80,5 +80,4 @@ public class CompanyService : ICompanyService {
 
         return queryable;
     }
-}
 }

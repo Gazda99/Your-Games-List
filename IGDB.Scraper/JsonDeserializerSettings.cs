@@ -3,7 +3,8 @@ using IGDB.Model.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace IGDB.Scraper {
+namespace IGDB.Scraper; 
+
 public static class JsonDeserializerSettings {
     public static readonly JsonSerializerSettings DefaultJsonSerializerSettings = new JsonSerializerSettings {
         Converters = new List<JsonConverter> {
@@ -14,5 +15,4 @@ public static class JsonDeserializerSettings {
             NamingStrategy = new SnakeCaseNamingStrategy()
         }
     };
-}
 }

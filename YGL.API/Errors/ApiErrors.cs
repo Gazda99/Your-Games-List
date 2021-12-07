@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.Errors {
+namespace YGL.API.Errors; 
+
 public class ApiErrors : IErrorContainer<ApiErrorCodes> {
     public Dictionary<ApiErrorCodes, string> Errors { get; set; } = new Dictionary<ApiErrorCodes, string>() {
         { ApiErrorCodes.JwtTokenValidationError, "Provided JWT token could not be validated." },
@@ -157,5 +158,4 @@ public enum ApiErrorCodes {
     GameModeNotFound = 2012_40_01,
     PlatformNotFound = 2013_40_01,
     PlayerPerspectiveNotFound = 2014_40_01,
-}
 }

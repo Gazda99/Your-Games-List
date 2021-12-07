@@ -11,7 +11,8 @@ using YGL.API.Contracts.V1.Responses.PlayerPerspective;
 using YGL.API.Domain;
 using YGL.API.Services.IControllers;
 
-namespace YGL.API.Controllers.V1 {
+namespace YGL.API.Controllers.V1; 
+
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class PlayerPerspectiveController : ControllerBase {
     private readonly IPlayerPerspectiveService _perspectiveService;
@@ -69,5 +70,4 @@ public class PlayerPerspectiveController : ControllerBase {
 
         return this.ReturnResult(perspectiveResult.StatusCode, res);
     }
-}
 }

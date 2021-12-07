@@ -1,4 +1,5 @@
-﻿namespace YGL.API.SafeObjects {
+﻿namespace YGL.API.SafeObjects; 
+
 public class SafePlatform {
     public int Id { get; set; }
 
@@ -11,5 +12,4 @@ public class SafePlatform {
         this.Abbr = platform.Abbr;
         this.Name = platform.Name;
     }
-}
 }

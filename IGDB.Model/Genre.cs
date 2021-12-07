@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class Genre : ITimestamps, IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
 
@@ -14,5 +15,4 @@ public class Genre : ITimestamps, IIdentifier, IHasChecksum {
     public string Slug { get; set; }
 
     public string Url { get; set; }
-}
 }

@@ -2,7 +2,8 @@
 using Microsoft.IdentityModel.Tokens;
 using YGL.API.Settings;
 
-namespace YGL.API.Services {
+namespace YGL.API.Services; 
+
 public class TokenValidationParametersWithoutLifetime : TokenValidationParameters {
     public TokenValidationParametersWithoutLifetime(JwtSettings jwtSettings) {
         ValidateIssuerSigningKey = true;
@@ -12,5 +13,4 @@ public class TokenValidationParametersWithoutLifetime : TokenValidationParameter
         RequireExpirationTime = false;
         ValidateLifetime = false;
     }
-}
 }

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 
-namespace IGDB.Model.Serialization {
+namespace IGDB.Model.Serialization; 
+
 public class IdentityConverter : JsonConverter {
     public override bool CanConvert(Type objectType) {
         return IsAssignableToGenericType(objectType, typeof(IdentityOrValue<>)) ||
@@ -94,5 +95,4 @@ public class IdentityConverter : JsonConverter {
 
         return IsAssignableToGenericType(baseType, genericType);
     }
-}
 }

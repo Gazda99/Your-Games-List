@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     [Table("GameWithWebsite")]
@@ -16,6 +14,7 @@ namespace YGL.Model
         public int GameId { get; set; }
         public byte Category { get; set; }
         [Required]
+        [Unicode(false)]
         public string Url { get; set; }
         [Required]
         public bool? ItemStatus { get; set; }

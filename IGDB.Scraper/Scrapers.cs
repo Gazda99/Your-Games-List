@@ -6,7 +6,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace IGDB.Scraper {
+namespace IGDB.Scraper;
+
 public class Scrapers {
     private const string BasicQuery = "fields *; ";
     private const string IGDBUrl = "https://api.igdb.com/v4/";
@@ -88,7 +89,7 @@ public class Scrapers {
 
 
     private delegate Task ConvertAndAddOrUpdate<in TIGDB>(TIGDB igdbModel, CountersDict countersDict);
-    
+
     /// <summary>
     /// Runs the generic scraper with provided parameters
     /// </summary>
@@ -98,13 +99,13 @@ public class Scrapers {
     /// <typeparam name="TIGDB">Type of objects that will be downloaded</typeparam>
     private async Task ScrapeConvertAndAddOrUpdateItem<TIGDB>(string endpoint,
         ConvertAndAddOrUpdate<TIGDB> convertAndAddOrUpdateFunc, string query = BasicQuery) {
-        GenericScraper genericScraper = new GenericScraper() { Url = IGDBUrl + endpoint };
+        var genericScraper = new GenericScraper() { Url = IGDBUrl + endpoint };
 
         List<TIGDB> list = await genericScraper.Scrape<TIGDB>(query, Lop, LimitInOneRequest);
 
-        CountersDict countersDict = new CountersDict();
+        var countersDict = new CountersDict();
 
-        Stopwatch operationSw = new Stopwatch();
+        var operationSw = new Stopwatch();
         operationSw.Start();
 
         int i = 0;
@@ -113,8 +114,8 @@ public class Scrapers {
             EntitiesLists preload = EntitiesLists.PreloadData(_dbConnection);
             // Keeps tracking the added and updated objects. This is helpful when some objects coming from IGDB Api are the same as others,
             // to not make duplicates in YGL database.
-            EntitiesLists added = new EntitiesLists();
-            EntitiesLists updated = new EntitiesLists();
+            var added = new EntitiesLists();
+            var updated = new EntitiesLists();
 
             foreach (TIGDB scrapedItem in list) {
                 ConvertAndAddOrUpdateGame(scrapedItem as IGDB.Model.Game, countersDict, preload, added, updated);
@@ -140,7 +141,7 @@ public class Scrapers {
 
         await _dbConnection.SaveChangesAsync();
 
-        TimeSpan timeSpan = TimeSpan.FromMilliseconds(operationSw.ElapsedMilliseconds);
+        var timeSpan = TimeSpan.FromMilliseconds(operationSw.ElapsedMilliseconds);
         operationSw.Stop();
 
         Console.WriteLine(countersDict.Print());
@@ -151,9 +152,9 @@ public class Scrapers {
     private async Task ConvertAndAddOrUpdateCompany(IGDB.Model.Company scrapedItem, CountersDict countersDict) {
         if (scrapedItem.Id is null) return;
 
-        Counters counters = new Counters();
+        var counters = new Counters();
 
-        YGL.Model.Company newItem = new YGL.Model.Company() {
+        var newItem = new YGL.Model.Company() {
             Id = (int)scrapedItem.Id,
             Name = scrapedItem.Name ?? String.Empty,
             Description = scrapedItem.Description ?? String.Empty,
@@ -180,9 +181,9 @@ public class Scrapers {
         CountersDict countersDict) {
         if (scrapedItem.Id is null) return;
 
-        Counters counters = new Counters();
+        var counters = new Counters();
 
-        YGL.Model.PlayerPerspective newItem = new YGL.Model.PlayerPerspective() {
+        var newItem = new YGL.Model.PlayerPerspective() {
             Id = (int)scrapedItem.Id,
             Name = scrapedItem.Name ?? String.Empty,
             ItemStatus = true
@@ -206,9 +207,9 @@ public class Scrapers {
     private async Task ConvertAndAddOrUpdatePlatform(IGDB.Model.Platform scrapedItem, CountersDict countersDict) {
         if (scrapedItem.Id is null) return;
 
-        Counters counters = new Counters();
+        var counters = new Counters();
 
-        YGL.Model.Platform newItem = new YGL.Model.Platform() {
+        var newItem = new YGL.Model.Platform() {
             Id = (int)scrapedItem.Id,
             Name = scrapedItem.Name ?? String.Empty,
             Abbr = scrapedItem.Abbreviation ?? String.Empty,
@@ -232,9 +233,9 @@ public class Scrapers {
     private async Task ConvertAndAddOrUpdateGameMode(IGDB.Model.GameMode scrapedItem, CountersDict countersDict) {
         if (scrapedItem.Id is null) return;
 
-        Counters counters = new Counters();
+        var counters = new Counters();
 
-        YGL.Model.GameMode newItem = new YGL.Model.GameMode() {
+        var newItem = new YGL.Model.GameMode() {
             Id = (int)scrapedItem.Id,
             Name = scrapedItem.Name ?? String.Empty,
             ItemStatus = true
@@ -257,9 +258,9 @@ public class Scrapers {
     private async Task ConvertAndAddOrUpdateGenre(IGDB.Model.Genre scrapedItem, CountersDict countersDict) {
         if (scrapedItem.Id is null) return;
 
-        Counters counters = new Counters();
+        var counters = new Counters();
 
-        YGL.Model.Genre newItem = new YGL.Model.Genre() {
+        var newItem = new YGL.Model.Genre() {
             Id = (int)scrapedItem.Id,
             Name = scrapedItem.Name ?? String.Empty,
             ItemStatus = true
@@ -282,9 +283,9 @@ public class Scrapers {
     private async Task ConvertAndAddOrUpdateTheme(IGDB.Model.Theme scrapedItem, CountersDict countersDict) {
         if (scrapedItem.Id is null) return;
 
-        Counters counters = new Counters();
+        var counters = new Counters();
 
-        YGL.Model.Theme newItem = new YGL.Model.Theme() {
+        var newItem = new YGL.Model.Theme() {
             Id = (int)scrapedItem.Id,
             Name = scrapedItem.Name ?? String.Empty,
             ItemStatus = true
@@ -309,9 +310,9 @@ public class Scrapers {
         EntitiesLists preload, EntitiesLists added, EntitiesLists updated) {
         if (scrapedItem.Id is null) return;
 
-        Counters counters = new Counters();
+        var counters = new Counters();
 
-        YGL.Model.Game newGame = new YGL.Model.Game() {
+        var newGame = new YGL.Model.Game() {
             Id = (int)scrapedItem.Id,
             Category = (int?)scrapedItem.Category,
             Name = scrapedItem.Name ?? String.Empty,
@@ -325,7 +326,7 @@ public class Scrapers {
         if (scrapedItem.Cover?.Value != null)
             newGame.ImageId = scrapedItem.Cover.Value.ImageId ?? String.Empty;
 
-        YGL.Model.Game foundGame = preload.Games.GetValueOrDefault(newGame.Id);
+        var foundGame = preload.Games.GetValueOrDefault(newGame.Id);
         if (foundGame is null) {
             _dbConnection.Games.Add(newGame);
             counters.Adding++;
@@ -349,7 +350,7 @@ public class Scrapers {
             foreach (IGDB.Model.InvolvedCompany scrapedInvolvedCompany in scrapedItem.InvolvedCompanies.Values) {
                 if (scrapedInvolvedCompany.Id == null || scrapedInvolvedCompany.Company.Value.Id == null) continue;
 
-                YGL.Model.GameHasCompany newGameHasCompany = new YGL.Model.GameHasCompany {
+                var newGameHasCompany = new YGL.Model.GameHasCompany {
                     CompanyId = (int)scrapedInvolvedCompany.Company.Value.Id,
                     GameId = newGame.Id,
                     IsDeveloper = scrapedInvolvedCompany.Developer ?? false,
@@ -359,12 +360,12 @@ public class Scrapers {
                     ItemStatus = true
                 };
 
-                Tuple<int, int, bool, bool, bool, bool> tuple = new Tuple<int, int, bool, bool, bool, bool>(
+                var tuple = new Tuple<int, int, bool, bool, bool, bool>(
                     newGame.Id, newGameHasCompany.CompanyId,
                     newGameHasCompany.IsDeveloper, newGameHasCompany.IsPorting, newGameHasCompany.IsPublisher,
                     newGameHasCompany.IsSupporting);
 
-                YGL.Model.GameHasCompany foundGameHasCompany = preload.GameHasCompanies.GetValueOrDefault(tuple);
+                var foundGameHasCompany = preload.GameHasCompanies.GetValueOrDefault(tuple);
 
                 if (foundGameHasCompany is null) {
                     if (added.GameHasCompanies.ContainsKey(tuple)) continue;
@@ -396,7 +397,7 @@ public class Scrapers {
             foreach (IGDB.Model.ReleaseDate scrapedReleaseDate in scrapedItem.ReleaseDates.Values) {
                 if (scrapedReleaseDate.Id == null || scrapedReleaseDate.Platform?.Value?.Id == null) continue;
 
-                YGL.Model.GameAndPlatformWithReleaseDate newReleaseDate = new YGL.Model.GameAndPlatformWithReleaseDate() {
+                var newReleaseDate = new YGL.Model.GameAndPlatformWithReleaseDate() {
                     PlatformId = (int)scrapedReleaseDate.Platform.Value.Id,
                     GameId = newGame.Id,
                     ReleaseDate = scrapedReleaseDate.Date?.Date ?? DateTime.UnixEpoch,
@@ -404,9 +405,8 @@ public class Scrapers {
                     ItemStatus = true
                 };
 
-                Tuple<int, int, int> tuple = new Tuple<int, int, int>(newGame.Id, newReleaseDate.PlatformId, newReleaseDate.Region);
-                YGL.Model.GameAndPlatformWithReleaseDate
-                    foundReleaseDate = preload.GameAndPlatformWithReleaseDates.GetValueOrDefault(tuple);
+                var tuple = new Tuple<int, int, int>(newGame.Id, newReleaseDate.PlatformId, newReleaseDate.Region);
+                var foundReleaseDate = preload.GameAndPlatformWithReleaseDates.GetValueOrDefault(tuple);
 
                 if (foundReleaseDate is null) {
                     if (added.GameAndPlatformWithReleaseDates.ContainsKey(tuple)) continue;
@@ -435,14 +435,14 @@ public class Scrapers {
 
         if (scrapedItem.GameModes?.Ids != null) {
             foreach (long scrapedGameModeId in scrapedItem.GameModes.Ids) {
-                YGL.Model.GameHasGameMode newGameHasGameMode = new YGL.Model.GameHasGameMode() {
+                var newGameHasGameMode = new YGL.Model.GameHasGameMode() {
                     GameId = newGame.Id,
                     GameModeId = (int)scrapedGameModeId,
                     ItemStatus = true
                 };
 
-                Tuple<int, int> tuple = new Tuple<int, int>(newGame.Id, newGameHasGameMode.GameModeId);
-                YGL.Model.GameHasGameMode foundGameMode = preload.GameHasGameModes.GetValueOrDefault(tuple);
+                var tuple = new Tuple<int, int>(newGame.Id, newGameHasGameMode.GameModeId);
+                var foundGameMode = preload.GameHasGameModes.GetValueOrDefault(tuple);
 
                 if (foundGameMode is null) {
                     if (added.GameHasGameModes.ContainsKey(tuple)) continue;
@@ -468,15 +468,15 @@ public class Scrapers {
 
         if (scrapedItem.Genres?.Ids != null) {
             foreach (long scrapedGenresId in scrapedItem.Genres.Ids) {
-                YGL.Model.GameHasGenre newGameHasGenre = new YGL.Model.GameHasGenre() {
+                var newGameHasGenre = new YGL.Model.GameHasGenre() {
                     GameId = newGame.Id,
                     GenreId = (int)scrapedGenresId,
                     ItemStatus = true
                 };
 
 
-                Tuple<int, int> tuple = new Tuple<int, int>(newGame.Id, newGameHasGenre.GenreId);
-                YGL.Model.GameHasGenre foundGenre = preload.GameHasGenres.GetValueOrDefault(tuple);
+                var tuple = new Tuple<int, int>(newGame.Id, newGameHasGenre.GenreId);
+                var foundGenre = preload.GameHasGenres.GetValueOrDefault(tuple);
 
                 if (foundGenre is null) {
                     if (added.GameHasGenres.ContainsKey(tuple)) continue;
@@ -502,14 +502,14 @@ public class Scrapers {
 
         if (scrapedItem.PlayerPerspectives?.Ids != null) {
             foreach (long scrapedPerspectiveId in scrapedItem.PlayerPerspectives.Ids) {
-                YGL.Model.GameHasPlayerPerspective newGameHasPerspective = new YGL.Model.GameHasPlayerPerspective() {
+                var newGameHasPerspective = new YGL.Model.GameHasPlayerPerspective() {
                     GameId = newGame.Id,
                     PlayerPerspectiveId = (int)scrapedPerspectiveId,
                     ItemStatus = true
                 };
 
-                Tuple<int, int> tuple = new Tuple<int, int>(newGame.Id, newGameHasPerspective.PlayerPerspectiveId);
-                YGL.Model.GameHasPlayerPerspective foundPerspective = preload.GameHasPlayerPerspectives.GetValueOrDefault(tuple);
+                var tuple = new Tuple<int, int>(newGame.Id, newGameHasPerspective.PlayerPerspectiveId);
+                var foundPerspective = preload.GameHasPlayerPerspectives.GetValueOrDefault(tuple);
 
                 if (foundPerspective is null) {
                     if (added.GameHasPlayerPerspectives.ContainsKey(tuple)) continue;
@@ -535,15 +535,15 @@ public class Scrapers {
 
         if (scrapedItem.AgeRatings?.Values != null) {
             foreach (IGDB.Model.AgeRating scrapedAgeRatings in scrapedItem.AgeRatings.Values) {
-                YGL.Model.GameWithAgeCategory newGameWithAgeCategory = new YGL.Model.GameWithAgeCategory() {
+                var newGameWithAgeCategory = new YGL.Model.GameWithAgeCategory() {
                     GameId = newGame.Id,
                     Category = (byte)scrapedAgeRatings.Category,
                     Rating = (byte)scrapedAgeRatings.Rating,
                     ItemStatus = true
                 };
 
-                Tuple<int, byte> tuple = new Tuple<int, byte>(newGame.Id, newGameWithAgeCategory.Category);
-                YGL.Model.GameWithAgeCategory foundAgeRating = preload.GameWithAgeCategories.GetValueOrDefault(tuple);
+                var tuple = new Tuple<int, byte>(newGame.Id, newGameWithAgeCategory.Category);
+                var foundAgeRating = preload.GameWithAgeCategories.GetValueOrDefault(tuple);
                 if (foundAgeRating is null) {
                     if (added.GameWithAgeCategories.ContainsKey(tuple)) continue;
 
@@ -569,15 +569,15 @@ public class Scrapers {
 
         if (scrapedItem.Themes?.Ids != null) {
             foreach (long scrapedThemeId in scrapedItem.Themes.Ids) {
-                YGL.Model.GameHasTheme newGameHasTheme = new YGL.Model.GameHasTheme() {
+                var newGameHasTheme = new YGL.Model.GameHasTheme() {
                     GameId = newGame.Id,
                     ThemeId = (int)scrapedThemeId,
                     ItemStatus = true
                 };
 
 
-                Tuple<int, int> tuple = new Tuple<int, int>(newGame.Id, newGameHasTheme.ThemeId);
-                YGL.Model.GameHasTheme foundGameHasThemes = preload.GameHasThemes.GetValueOrDefault(tuple);
+                var tuple = new Tuple<int, int>(newGame.Id, newGameHasTheme.ThemeId);
+                var foundGameHasThemes = preload.GameHasThemes.GetValueOrDefault(tuple);
                 if (foundGameHasThemes is null) {
                     if (added.GameHasThemes.ContainsKey(tuple)) continue;
 
@@ -603,15 +603,15 @@ public class Scrapers {
 
         if (scrapedItem.Websites?.Values != null) {
             foreach (IGDB.Model.Website scrapedWebsite in scrapedItem.Websites.Values) {
-                YGL.Model.GameWithWebsite newGameWithWebsite = new YGL.Model.GameWithWebsite() {
+                var newGameWithWebsite = new YGL.Model.GameWithWebsite() {
                     GameId = newGame.Id,
                     Category = (byte)scrapedWebsite.Category,
                     Url = scrapedWebsite.Url ?? String.Empty,
                     ItemStatus = true
                 };
 
-                Tuple<int, string> tuple = new Tuple<int, string>(newGame.Id, newGameWithWebsite.Url);
-                YGL.Model.GameWithWebsite foundWebsite = preload.GameWithWebsites.GetValueOrDefault(tuple);
+                var tuple = new Tuple<int, string>(newGame.Id, newGameWithWebsite.Url);
+                var foundWebsite = preload.GameWithWebsites.GetValueOrDefault(tuple);
 
                 if (foundWebsite is null) {
                     if (added.GameWithWebsites.ContainsKey(tuple)) continue;
@@ -656,8 +656,8 @@ public class Scrapers {
     // Working a little bit different than above ones. Does not need to be passed to ScrapeConvertAndAddOrUpdateItem method. It is runned
     // along with ScrapeGames function.
     private void AddOrUpdateDlcOrExpansion(EntitiesLists preload) {
-        Counters counters = new Counters();
-        CountersDict countersDict = new CountersDict();
+        var counters = new Counters();
+        var countersDict = new CountersDict();
 
         //dlcs
         foreach ((int baseId, int dlcId) in _dlcs) {
@@ -667,8 +667,8 @@ public class Scrapers {
                 ItemStatus = true
             };
 
-            YGL.Model.Game foundBaseGame = preload.Games.GetValueOrDefault(baseId);
-            YGL.Model.Game foundDlcGame = preload.Games.GetValueOrDefault(dlcId);
+            var foundBaseGame = preload.Games.GetValueOrDefault(baseId);
+            var foundDlcGame = preload.Games.GetValueOrDefault(dlcId);
 
             if (foundBaseGame is null) {
                 Console.WriteLine($"Base game with id: {baseId} not found in db, cannot add dlc with id: {dlcId}");
@@ -681,7 +681,7 @@ public class Scrapers {
                 continue;
             }
 
-            YGL.Model.Dlc foundDlc = preload.Dlcs.GetValueOrDefault(new Tuple<int, int>(newDlc.GameBaseId, newDlc.GameDlcId));
+            var foundDlc = preload.Dlcs.GetValueOrDefault(new Tuple<int, int>(newDlc.GameBaseId, newDlc.GameDlcId));
 
             if (foundDlc is null) {
                 _dbConnection.Dlcs.Add(newDlc);
@@ -698,14 +698,14 @@ public class Scrapers {
         counters = new Counters();
 
         foreach ((int baseId, int expansionId) in _expansions) {
-            YGL.Model.Expansion newExpansion = new YGL.Model.Expansion {
+            var newExpansion = new YGL.Model.Expansion {
                 GameBaseId = baseId,
                 GameExpansionId = expansionId,
                 ItemStatus = true
             };
 
-            YGL.Model.Game foundBaseGame = preload.Games.GetValueOrDefault(baseId);
-            YGL.Model.Game foundExpansionGame = preload.Games.GetValueOrDefault(expansionId);
+            var foundBaseGame = preload.Games.GetValueOrDefault(baseId);
+            var foundExpansionGame = preload.Games.GetValueOrDefault(expansionId);
 
             if (foundBaseGame is null) {
                 Console.WriteLine(
@@ -719,7 +719,7 @@ public class Scrapers {
                 continue;
             }
 
-            YGL.Model.Expansion foundExpansion =
+            var foundExpansion =
                 preload.Expansions.GetValueOrDefault(new Tuple<int, int>(newExpansion.GameBaseId, newExpansion.GameExpansionId));
 
             if (foundExpansion is null) {
@@ -763,7 +763,7 @@ public class Scrapers {
         }
 
         public string Print() {
-            StringBuilder sb = new StringBuilder();
+            var sb = new StringBuilder();
 
             foreach ((string key, Counters value) in _dict)
                 sb.Append($"Added {value.Adding} and updated {value.Updating} of {key} objects to database\n");
@@ -771,5 +771,4 @@ public class Scrapers {
             return sb.ToString();
         }
     }
-}
 }

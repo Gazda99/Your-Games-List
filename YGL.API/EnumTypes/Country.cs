@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.EnumTypes {
+namespace YGL.API.EnumTypes; 
+
 public static class Country {
     public const string Afghanistan = "Afghanistan";
     public const string Albania = "Albania";
@@ -762,5 +763,4 @@ public enum Countries {
     Samoa = 882,
     Yemen = 887,
     Zambia = 894,
-}
 }

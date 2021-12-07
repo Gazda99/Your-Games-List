@@ -11,7 +11,8 @@ using YGL.API.SafeObjects;
 using YGL.API.Services.IControllers;
 using YGL.API.Validation;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public class PlayerPerspectiveService : IPlayerPerspectiveService {
     private readonly YGL.Model.YGLDataContext _yglDataContext;
 
@@ -20,7 +21,7 @@ public class PlayerPerspectiveService : IPlayerPerspectiveService {
     }
 
     public async Task<PlayerPerspectiveResult> GetPlayerPerspectives(string perspectiveIds) {
-        PlayerPerspectiveResult perspectiveResult = new PlayerPerspectiveResult();
+        var perspectiveResult = new PlayerPerspectiveResult();
 
         if (!ValidationUrl.TryParseInt(perspectiveIds, perspectiveResult, out List<int> ids)) {
             perspectiveResult.IsSuccess = false;
@@ -28,8 +29,7 @@ public class PlayerPerspectiveService : IPlayerPerspectiveService {
             return perspectiveResult;
         }
 
-        List<YGL.Model.PlayerPerspective> foundPerspectives =
-            await _yglDataContext.PlayerPerspectives.Where(p => ids.Contains(p.Id)).ToListAsync();
+        var foundPerspectives = await _yglDataContext.PlayerPerspectives.Where(p => ids.Contains(p.Id)).ToListAsync();
 
         if (foundPerspectives is null || foundPerspectives.Count == 0) {
             perspectiveResult.IsSuccess = false;
@@ -47,15 +47,13 @@ public class PlayerPerspectiveService : IPlayerPerspectiveService {
 
     public async Task<PlayerPerspectiveResult> GetPlayerPerspectivesFilter(PlayerPerspectiveFilterQuery platformFilterQuery,
         PaginationFilter paginationFilter) {
-        PlayerPerspectiveResult perspectiveResult = new PlayerPerspectiveResult();
+        var perspectiveResult = new PlayerPerspectiveResult();
 
-        IQueryable<YGL.Model.PlayerPerspective> perspectivesQueryable = _yglDataContext.PlayerPerspectives
-            .Where(u => u.ItemStatus == true);
+        var perspectivesQueryable = _yglDataContext.PlayerPerspectives.Where(u => u.ItemStatus == true);
 
         perspectivesQueryable = AddFiltersOnQueryGetPlayerPerspectives(platformFilterQuery, perspectivesQueryable);
 
-        List<YGL.Model.PlayerPerspective> foundPerspectives =
-            (await perspectivesQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
+        var foundPerspectives = (await perspectivesQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
         if (foundPerspectives is null || foundPerspectives.Count == 0) {
             perspectiveResult.IsSuccess = false;
@@ -81,5 +79,4 @@ public class PlayerPerspectiveService : IPlayerPerspectiveService {
 
         return queryable;
     }
-}
 }

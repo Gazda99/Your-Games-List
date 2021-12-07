@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class ExternalGame : ITimestamps, IIdentifier, IHasChecksum {
     public ExternalCategory? Category { get; set; }
 
@@ -44,5 +45,4 @@ public enum ExternalCategory {
     AmazonAdg = 23,
     EpicGameStore = 26,
     Oculus = 28
-}
 }

@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using YGL.API.Helpers;
 
-namespace YGL.API.Errors {
+namespace YGL.API.Errors;
+
 public static class ApiErrorExtensions {
     private const string NoErrorDescription = "No error description.";
 
@@ -44,5 +45,4 @@ public static class ApiErrorExtensions {
         iErrorList.ErrorCodes = iErrorList2.ErrorCodes;
         iErrorList.ErrorMessages = iErrorList2.ErrorMessages;
     }
-}
 }

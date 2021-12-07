@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class MultiplayerMode : IIdentifier, IHasChecksum {
     [JsonProperty("campaigncoop")] public bool? CampaignCoop { get; set; }
     public string Checksum { get; set; }
@@ -17,5 +18,4 @@ public class MultiplayerMode : IIdentifier, IHasChecksum {
     public IdentityOrValue<Platform> Platform { get; set; }
     [JsonProperty("splitscreen")] public bool? SplitScreen { get; set; }
     [JsonProperty("splitscreenonline")] public bool? SplitScreenOnline { get; set; }
-}
 }

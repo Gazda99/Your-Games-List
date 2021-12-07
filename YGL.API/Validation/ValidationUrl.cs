@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using YGL.API.Errors;
 using YGL.API.Exceptions;
 
-namespace YGL.API.Validation {
+namespace YGL.API.Validation; 
+
 public static class ValidationUrl {
     private const char Delimiter = ',';
     private const char Range = '-';
@@ -151,5 +152,4 @@ public static class ValidationUrl {
             throw new CannotParseIdListInUriException(CannotParseIdListInUriException.BadValue);
         }
     }
-}
 }

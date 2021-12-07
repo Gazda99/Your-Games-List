@@ -1,4 +1,5 @@
-﻿namespace YGL.API.Contracts.V1.Requests.Identity {
+﻿namespace YGL.API.Contracts.V1.Requests.Identity; 
+
 public class UpdateUserReq {
     public byte Gender { get; set; }
     public short BirthYear { get; set; }
@@ -6,5 +7,4 @@ public class UpdateUserReq {
     public string About { get; set; }
 
     public string Slug { get; set; }
-}
 }

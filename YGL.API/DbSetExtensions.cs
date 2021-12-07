@@ -5,7 +5,8 @@ using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace YGL.API {
+namespace YGL.API; 
+
 public static class DbSetExtensions {
     //maybe use offset instead of skip
     public static async Task<List<TSource>> ToPaginatedListAsync<TSource>(
@@ -13,5 +14,4 @@ public static class DbSetExtensions {
         CancellationToken cancellationToken = default) {
         return await source.Skip(skip).Take(pageSize).ToListAsync(cancellationToken);
     }
-}
 }

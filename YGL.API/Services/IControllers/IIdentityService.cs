@@ -1,7 +1,8 @@
 ﻿using System.Threading.Tasks;
 using YGL.API.Domain;
 
-namespace YGL.API.Services.IControllers {
+namespace YGL.API.Services.IControllers; 
+
 public interface IIdentityService {
     public Task<AuthenticationResult> LoginAsync(string username, string password);
 
@@ -20,5 +21,4 @@ public interface IIdentityService {
     public Task<PasswordResetResult> SendResetPasswordEmailAsync(string email);
     public Task<PasswordResetResult> ConfirmResetPasswordAsync(string url);
     public Task<PasswordResetResult> ResetPasswordAsync(string passwordResetToken,string newPassword);
-}
 }

@@ -11,7 +11,8 @@ using YGL.API.Contracts.V1.Responses.Genre;
 using YGL.API.Domain;
 using YGL.API.Services.IControllers;
 
-namespace YGL.API.Controllers.V1 {
+namespace YGL.API.Controllers.V1;
+
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class GenreController : ControllerBase {
     private readonly IGenreService _genreService;
@@ -51,8 +52,7 @@ public class GenreController : ControllerBase {
         [FromQuery] GenreFilterQuery genreFilterQuery, [FromQuery] PaginationQuery paginationQuery) {
         IResponse res;
 
-        GenreResult genreResult =
-            await _genreService.GetGenresFilter(genreFilterQuery, (PaginationFilter)paginationQuery);
+        GenreResult genreResult = await _genreService.GetGenresFilter(genreFilterQuery, (PaginationFilter)paginationQuery);
 
         if (genreResult.IsSuccess) {
             res = genreResult.Genres
@@ -69,5 +69,4 @@ public class GenreController : ControllerBase {
 
         return this.ReturnResult(genreResult.StatusCode, res);
     }
-}
 }

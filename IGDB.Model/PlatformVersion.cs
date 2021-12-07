@@ -1,6 +1,7 @@
 using Newtonsoft.Json;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class PlatformVersion : IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
     public IdentitiesOrValues<PlatformVersionCompany> Companies { get; set; }
@@ -22,5 +23,4 @@ public class PlatformVersion : IIdentifier, IHasChecksum {
     public string Storage { get; set; }
     public string Summary { get; set; }
     public string Url { get; set; }
-}
 }

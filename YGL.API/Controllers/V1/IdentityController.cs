@@ -6,7 +6,8 @@ using YGL.API.Contracts.V1.Responses.Identity;
 using YGL.API.Domain;
 using YGL.API.Services.IControllers;
 
-namespace YGL.API.Controllers.V1 {
+namespace YGL.API.Controllers.V1;
+
 public class IdentityController : ControllerBase {
     private readonly IIdentityService _identityService;
 
@@ -16,8 +17,7 @@ public class IdentityController : ControllerBase {
 
     [HttpPost(Routes.Identity.Login)]
     public async Task<IActionResult> Login([FromBody] UserLoginReq req) {
-        AuthenticationResult authResult = await _identityService.LoginAsync(
-            req.Username, req.Password);
+        AuthenticationResult authResult = await _identityService.LoginAsync(req.Username, req.Password);
         IResponse res;
 
         if (authResult.IsSuccess) {
@@ -36,8 +36,7 @@ public class IdentityController : ControllerBase {
 
     [HttpPost(Routes.Identity.Register)]
     public async Task<IActionResult> Register([FromBody] UserRegisterReq req) {
-        AuthenticationResult authResult =
-            await _identityService.RegisterAsync(req.Email, req.Username, req.Password);
+        AuthenticationResult authResult = await _identityService.RegisterAsync(req.Email, req.Username, req.Password);
         IResponse res;
 
         if (authResult.IsSuccess) {
@@ -70,8 +69,7 @@ public class IdentityController : ControllerBase {
 
     [HttpPost(Routes.Identity.EmailConfirmationResendEmail)]
     public async Task<IActionResult> EmailConfirmationResendEmail([FromBody] EmailConfirmationResendReq req) {
-        EmailConfirmationResult emailConfirmationResult =
-            await _identityService.ResendConfirmationEmailAsync(req.Email);
+        EmailConfirmationResult emailConfirmationResult = await _identityService.ResendConfirmationEmailAsync(req.Email);
         IResponse res;
 
         if (emailConfirmationResult.IsSuccess) {
@@ -129,8 +127,7 @@ public class IdentityController : ControllerBase {
 
     [HttpPost(Routes.Identity.ResetPassword)]
     public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordReq req) {
-        PasswordResetResult passwordResetResult =
-            await _identityService.ResetPasswordAsync(req.ResetPasswordToken, req.NewPassword);
+        PasswordResetResult passwordResetResult = await _identityService.ResetPasswordAsync(req.ResetPasswordToken, req.NewPassword);
         IResponse res;
 
         if (passwordResetResult.IsSuccess) {
@@ -141,5 +138,4 @@ public class IdentityController : ControllerBase {
         res = new PasswordResetFailRes().WithErrors(passwordResetResult).ToResponseWithErrors();
         return this.ReturnResult(passwordResetResult.StatusCode, res);
     }
-}
 }

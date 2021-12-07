@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     [Table("Group")]
@@ -21,11 +19,14 @@ namespace YGL.Model
         public long CreatorId { get; set; }
         [Required]
         [StringLength(128)]
+        [Unicode(false)]
         public string Name { get; set; }
         [Required]
         [StringLength(2000)]
+        [Unicode(false)]
         public string Description { get; set; }
         [StringLength(128)]
+        [Unicode(false)]
         public string Slug { get; set; }
         public short UsersAmount { get; set; }
         [Column(TypeName = "datetime")]

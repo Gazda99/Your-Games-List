@@ -11,7 +11,8 @@ using YGL.API.Contracts.V1.Responses.GameMode;
 using YGL.API.Domain;
 using YGL.API.Services.IControllers;
 
-namespace YGL.API.Controllers.V1 {
+namespace YGL.API.Controllers.V1; 
+
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class GameModeController : ControllerBase {
     private readonly IGameModeService _gameModeService;
@@ -69,5 +70,4 @@ public class GameModeController : ControllerBase {
 
         return this.ReturnResult(gameModeResult.StatusCode, res);
     }
-}
 }

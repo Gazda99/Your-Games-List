@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class GameVersionFeatureValue : IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
     public IdentityOrValue<Game> Game { get; set; }
@@ -12,5 +13,4 @@ public enum IncludedFeature {
     NotIncluded = 0,
     Included = 1,
     PreOrderOnly = 2
-}
 }

@@ -2,7 +2,8 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace IGDB.Scraper {
+namespace IGDB.Scraper; 
+
 public class SimpleHttpClient {
     private readonly HttpClient _client = new HttpClient();
 
@@ -37,5 +38,4 @@ public class SimpleHttpClient {
 
     public async Task<HttpResponseMessage> SendAsync(SimpleHttpRequestMsg req) =>
         await SendAsync((HttpRequestMessage)req);
-}
 }

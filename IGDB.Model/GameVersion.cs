@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class GameVersion : ITimestamps, IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
@@ -10,5 +11,4 @@ public class GameVersion : ITimestamps, IIdentifier, IHasChecksum {
     public long? Id { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
     public string Url { get; set; }
-}
 }

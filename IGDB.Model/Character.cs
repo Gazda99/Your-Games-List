@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class Character : ITimestamps, IIdentifier, IHasChecksum {
     public string[] Akas { get; set; }
     public string Checksum { get; set; }
@@ -30,5 +31,4 @@ public enum Species {
     Animal = 3,
     Android = 4,
     Unknown = 5
-}
 }

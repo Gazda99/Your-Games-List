@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public enum ReleaseDateRegion {
     Europe = 1,
     NorthAmerica = 2,
@@ -10,5 +11,4 @@ public enum ReleaseDateRegion {
     Worldwide = 8,
     Korea = 9,
     Brazil = 10
-}
 }

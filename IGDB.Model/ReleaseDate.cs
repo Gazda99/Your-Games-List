@@ -1,7 +1,8 @@
 using System;
 using Newtonsoft.Json;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class ReleaseDate : ITimestamps, IIdentifier, IHasChecksum {
     public ReleaseDateCategory? Category { get; set; }
     public string Checksum { get; set; }
@@ -15,5 +16,4 @@ public class ReleaseDate : ITimestamps, IIdentifier, IHasChecksum {
     public ReleaseDateRegion? Region { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
     [JsonProperty("y")] public int? Year { get; set; }
-}
 }

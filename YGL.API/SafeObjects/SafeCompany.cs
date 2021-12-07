@@ -1,4 +1,5 @@
-﻿namespace YGL.API.SafeObjects {
+﻿namespace YGL.API.SafeObjects; 
+
 public class SafeCompany {
     public int Id { get; set; }
     public string Description { get; set; }
@@ -11,5 +12,4 @@ public class SafeCompany {
         this.Name = company.Name;
         this.Country = company.Country;
     }
-}
 }

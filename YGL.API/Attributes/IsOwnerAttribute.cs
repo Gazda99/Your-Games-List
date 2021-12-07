@@ -2,7 +2,8 @@
 using System.Linq;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace YGL.API.Attributes {
+namespace YGL.API.Attributes; 
+
 public class IsOwnerAttribute : ForbiddenActionFilterAttribute {
     public override void OnActionExecuting(ActionExecutingContext context) {
         try {
@@ -25,5 +26,4 @@ public class IsOwnerAttribute : ForbiddenActionFilterAttribute {
 
         ReturnForbidden(context);
     }
-}
 }

@@ -1,7 +1,8 @@
 using System;
 using Newtonsoft.Json;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class InvolvedCompany : ITimestamps, IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
     public IdentityOrValue<Company> Company { get; set; }
@@ -13,5 +14,4 @@ public class InvolvedCompany : ITimestamps, IIdentifier, IHasChecksum {
     [JsonProperty("publisher")] public bool? Publisher { get; set; }
     public bool? Supporting { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
-}
 }

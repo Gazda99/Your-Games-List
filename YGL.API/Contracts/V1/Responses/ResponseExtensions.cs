@@ -3,7 +3,8 @@ using System.Linq;
 using YGL.API.Domain;
 using YGL.API.Errors;
 
-namespace YGL.API.Contracts.V1.Responses {
+namespace YGL.API.Contracts.V1.Responses; 
+
 public static class ResponseExtensions {
     public static SingleResponse<T> ToSingleResponse<T>(this T response) where T : IObjectForResponse {
         return new SingleResponse<T>(response);
@@ -38,5 +39,4 @@ public static class ResponseExtensions {
         thisErrorLists.ErrorMessages = errorList.ErrorMessages;
         return thisErrorLists;
     }
-}
 }

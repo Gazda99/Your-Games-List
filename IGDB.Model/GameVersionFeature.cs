@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class GameVersionFeature : IIdentifier, IHasChecksum {
     public GameVersionFeatureCategory Category { get; set; }
     public string Checksum { get; set; }
@@ -12,5 +13,4 @@ public class GameVersionFeature : IIdentifier, IHasChecksum {
 public enum GameVersionFeatureCategory {
     Boolean = 0,
     Description = 1
-}
 }

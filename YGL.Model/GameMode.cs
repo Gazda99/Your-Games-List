@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     [Table("GameMode")]
@@ -19,6 +17,7 @@ namespace YGL.Model
         [Key]
         public int Id { get; set; }
         [Required]
+        [Unicode(false)]
         public string Name { get; set; }
         [Required]
         public bool? ItemStatus { get; set; }

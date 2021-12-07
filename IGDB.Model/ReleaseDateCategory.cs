@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public enum ReleaseDateCategory {
     YYYYMMMMDD = 0,
     YYYYMMMM = 1,
@@ -8,5 +9,4 @@ public enum ReleaseDateCategory {
     YYYYQ3 = 5,
     YYYYQ4 = 6,
     TBD = 7
-}
 }

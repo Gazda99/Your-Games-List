@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Net.Http;
 
-namespace IGDB.Scraper {
+namespace IGDB.Scraper;
+
 public class SimpleHttpRequestMsg {
     private readonly HttpRequestMessage _req;
 
@@ -19,7 +20,7 @@ public class SimpleHttpRequestMsg {
     /// </summary>
     /// <returns>New SimpleHttpRequestMsg instance</returns>
     public static SimpleHttpRequestMsg MethodAndUri(HttpMethod method, string uri) {
-        SimpleHttpRequestMsg sHttpReq = new SimpleHttpRequestMsg(method, uri);
+        var sHttpReq = new SimpleHttpRequestMsg(method, uri);
         return sHttpReq;
     }
 
@@ -40,7 +41,7 @@ public class SimpleHttpRequestMsg {
     /// </summary>
     /// <returns>SimpleHttpRequestMsg instance</returns>
     public SimpleHttpRequestMsg Content(Dictionary<string, string> data) {
-        FormUrlEncodedContent content = new FormUrlEncodedContent(data);
+        var content = new FormUrlEncodedContent(data);
         _req.Content = content;
         return this;
     }
@@ -50,9 +51,8 @@ public class SimpleHttpRequestMsg {
     /// </summary>
     /// <returns>SimpleHttpRequestMsg instance</returns>
     public SimpleHttpRequestMsg Content(string data) {
-        StringContent content = new StringContent(data);
+        var content = new StringContent(data);
         _req.Content = content;
         return this;
     }
-}
 }

@@ -3,7 +3,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OpenApi.Models;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class SwaggerInstaller : IInstaller {
     public void InstallServices(IServiceCollection services, IConfiguration configuration) {
         services.AddSwaggerGen(swaggerGenOptions => {
@@ -28,5 +29,4 @@ public class SwaggerInstaller : IInstaller {
             });
         });
     }
-}
 }

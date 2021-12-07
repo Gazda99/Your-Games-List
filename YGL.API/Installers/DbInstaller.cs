@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class DbInstaller : IInstaller {
     private const string YGLDbConnectionString = "YGLDBConnectionString";
 
@@ -10,5 +11,4 @@ public class DbInstaller : IInstaller {
         services.AddDbContext<YGL.Model.YGLDataContext>(options => options.UseSqlServer(
             configuration.GetConnectionString(YGLDbConnectionString)));
     }
-}
 }

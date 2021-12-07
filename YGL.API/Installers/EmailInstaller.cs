@@ -3,14 +3,15 @@ using Microsoft.Extensions.DependencyInjection;
 using YGL.API.Services;
 using YGL.API.Settings;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class EmailInstaller : IInstaller {
     public void InstallServices(IServiceCollection services, IConfiguration configuration) {
-        ConfirmationEmailSettings confirmationEmailSettings = new ConfirmationEmailSettings();
+        var confirmationEmailSettings = new ConfirmationEmailSettings();
         configuration.Bind(EmailConfigurationKey(nameof(confirmationEmailSettings)), confirmationEmailSettings);
         services.AddSingleton(confirmationEmailSettings);
 
-        PasswordResetEmailSettings passwordResetEmailSettings = new PasswordResetEmailSettings();
+        var passwordResetEmailSettings = new PasswordResetEmailSettings();
         configuration.Bind(EmailConfigurationKey(nameof(passwordResetEmailSettings)), passwordResetEmailSettings);
         services.AddSingleton(passwordResetEmailSettings);
 
@@ -24,5 +25,4 @@ public class EmailInstaller : IInstaller {
     private static string EmailConfigurationKey(string nameOfSetting) {
         return $"EmailSettings:{nameOfSetting}";
     }
-}
 }

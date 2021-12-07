@@ -1,4 +1,5 @@
-﻿namespace YGL.API.SafeObjects {
+﻿namespace YGL.API.SafeObjects; 
+
 public class SafePlayerPerspective {
     public int Id { get; set; }
 
@@ -8,5 +9,4 @@ public class SafePlayerPerspective {
         this.Id = playerPerspective.Id;
         this.Name = playerPerspective.Name;
     }
-}
 }

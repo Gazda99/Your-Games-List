@@ -13,7 +13,8 @@ using YGL.API.Domain;
 using YGL.API.Services;
 using YGL.API.Settings;
 
-namespace YGL.API.Attributes {
+namespace YGL.API.Attributes; 
+
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
 public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
     private readonly TimeSpan _timeToLiveSeconds;
@@ -24,7 +25,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
 
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next) {
         //before
-        RedisCacheSettings cacheSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();
+        var cacheSettings = context.HttpContext.RequestServices.GetRequiredService<RedisCacheSettings>();
         Console.WriteLine();
 
         if (!cacheSettings.Enabled) {
@@ -32,8 +33,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
             return;
         }
 
-        IRedisCacheService cacheService =
-            context.HttpContext.RequestServices.GetRequiredService<IRedisCacheService>();
+        var cacheService = context.HttpContext.RequestServices.GetRequiredService<IRedisCacheService>();
 
         string cacheKey = GenerateCacheKeyFromRequest(context.HttpContext.Request);
         string cachedResponse;
@@ -54,7 +54,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
         ActionExecutedContext executedContext = await next();
 
         //after
-        ObjectResult response = (ObjectResult)executedContext.Result;
+        var response = (ObjectResult)executedContext.Result;
         object responseBody = response.Value;
 
 
@@ -73,15 +73,15 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
         const string skipKey = "skip";
         const string takeKey = "take";
 
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
         sb.Append(request.Path.ToString());
 
         Dictionary<string, StringValues> queryParams = request.Query
             .ToDictionary(q => q.Key, q => q.Value);
 
-        QueryString queryString = request.QueryString;
+        var queryString = request.QueryString;
 
-        bool check = false;
+        var check = false;
         if (request.Query.ContainsKey(skipKey)) {
             int skip = GetValueFromQuery(request.Query, skipKey);
             skip = PaginationFilter.SetSkip(skip);
@@ -101,7 +101,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
             queryString = QueryString.Create(changedQueryCollection);
         }
 
-        sb.Append(queryString);
+        sb.Append(queryString.ToString());
         Console.WriteLine(sb.ToString());
         return sb.ToString();
     }
@@ -115,5 +115,4 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
         const int ok = (int)HttpStatusCode.OK;
         return statusCode == ok;
     }
-}
 }

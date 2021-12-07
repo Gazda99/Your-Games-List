@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.EnumTypes {
+namespace YGL.API.EnumTypes; 
+
 public class Region {
     public const string NotSpecified = "NotSpecified";
     public const string Europe = "Europe";
@@ -47,5 +48,4 @@ public enum Regions {
     WorldWide = 8,
     Korea = 9,
     Brazil = 10,
-}
 }

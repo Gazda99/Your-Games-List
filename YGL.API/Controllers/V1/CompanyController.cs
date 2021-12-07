@@ -11,7 +11,8 @@ using YGL.API.Contracts.V1.Responses.Company;
 using YGL.API.Domain;
 using YGL.API.Services.IControllers;
 
-namespace YGL.API.Controllers.V1 {
+namespace YGL.API.Controllers.V1; 
+
 [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
 public class CompanyController : ControllerBase {
     private readonly ICompanyService _companyService;
@@ -67,5 +68,4 @@ public class CompanyController : ControllerBase {
 
         return this.ReturnResult(companyResult.StatusCode, res);
     }
-}
 }

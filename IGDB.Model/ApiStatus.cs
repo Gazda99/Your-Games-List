@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class ApiStatus {
     public bool Authorized { get; set; }
     public string Plan { get; set; }
@@ -18,5 +19,4 @@ public class UsageReport {
     public DateTime PeriodEnd { get; set; }
     public int MaxValue { get; set; }
     public int CurrentValue { get; set; }
-}
 }

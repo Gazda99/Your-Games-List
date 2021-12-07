@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace YGL.API.Exceptions {
+namespace YGL.API.Exceptions; 
+
 public class CannotParseIdListInUriException : Exception {
     public const string BadValue = "Bad Value";
     public const string TooManyItems = "Too many items";
@@ -10,5 +11,4 @@ public class CannotParseIdListInUriException : Exception {
     public CannotParseIdListInUriException(string message) : base(message) { }
 
     public CannotParseIdListInUriException(string message, Exception inner) : base(message, inner) { }
-}
 }

@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class Company : ITimestamps, IIdentifier, IHasChecksum {
     public DateTimeOffset? ChangeDate { get; set; }
     public ChangeDateCategory ChangeDateCategory { get; set; }
@@ -51,5 +52,4 @@ public enum StartDateCategory {
     YYYYQ3 = 5,
     YYYYQ4 = 6,
     TBD = 7
-}
 }

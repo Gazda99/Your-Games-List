@@ -2,7 +2,8 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class ServicesInstaller {
     public void InstallServicesInOrder(IServiceCollection services, IConfiguration configuration) {
         List<IInstaller> installers = new List<IInstaller>() {
@@ -24,5 +25,4 @@ public class ServicesInstaller {
         foreach (IInstaller installer in installers)
             installer.InstallServices(services, configuration);
     }
-}
 }

@@ -12,7 +12,8 @@ using YGL.API.SafeObjects;
 using YGL.API.Services.IControllers;
 using YGL.API.Validation;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public class UserService : IUserService {
     private readonly YGL.Model.YGLDataContext _yglDataContext;
 
@@ -22,7 +23,7 @@ public class UserService : IUserService {
 
 
     public async Task<UserResult> GetUsers(string userIds) {
-        UserResult userResult = new UserResult();
+        var userResult = new UserResult();
 
         if (!ValidationUrl.TryParseLong(userIds, userResult, out List<long> ids)) {
             userResult.IsSuccess = false;
@@ -30,7 +31,7 @@ public class UserService : IUserService {
             return userResult;
         }
 
-        List<YGL.Model.User> foundUsers = await _yglDataContext.Users
+        var foundUsers = await _yglDataContext.Users
             .Include(u => u.Groups)
             .Include(u => u.ListOfGames)
             .Include(u => u.FriendFriendOnes)
@@ -51,17 +52,16 @@ public class UserService : IUserService {
     }
 
     public async Task<UserResult> GetUsersFilter(UserFilterQuery userFilterQuery, PaginationFilter paginationFilter) {
-        UserResult userResult = new UserResult();
+        var userResult = new UserResult();
 
-        IQueryable<YGL.Model.User> usersQueryable = AddFiltersOnQueryGetUsers(userFilterQuery, _yglDataContext.Users);
+        var usersQueryable = AddFiltersOnQueryGetUsers(userFilterQuery, _yglDataContext.Users);
 
-        List<YGL.Model.User> foundUsers =
-            (await usersQueryable
-                .Include(u => u.Groups)
-                .Include(u => u.ListOfGames)
-                .Include(u => u.FriendFriendOnes)
-                .Include(u => u.FriendFriendTwos)
-                .ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
+        var foundUsers = (await usersQueryable
+            .Include(u => u.Groups)
+            .Include(u => u.ListOfGames)
+            .Include(u => u.FriendFriendOnes)
+            .Include(u => u.FriendFriendTwos)
+            .ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
         if (foundUsers is null || foundUsers.Count == 0) {
             userResult.IsSuccess = false;
@@ -80,9 +80,8 @@ public class UserService : IUserService {
     }
 
     public async Task<UserResult> UpdateUser(long userId, UpdateUserReq updateUserReq) {
-        UserResult userResult = new UserResult();
-        YGL.Model.User foundUser =
-            await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Id == userId && u.ItemStatus == true);
+        var userResult = new UserResult();
+        var foundUser = await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Id == userId && u.ItemStatus == true);
 
         if (foundUser is null) {
             userResult.IsSuccess = false;
@@ -129,9 +128,8 @@ public class UserService : IUserService {
 
 
     public async Task<UserResult> DeleteUser(long userId) {
-        UserResult userResult = new UserResult();
-        YGL.Model.User foundUser =
-            await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Id == userId && u.ItemStatus == true);
+        var userResult = new UserResult();
+        var foundUser = await _yglDataContext.Users.FirstOrDefaultAsync(u => u.Id == userId && u.ItemStatus == true);
 
         if (foundUser is null) {
             userResult.IsSuccess = false;
@@ -163,5 +161,4 @@ public class UserService : IUserService {
 
         return queryable;
     }
-}
 }

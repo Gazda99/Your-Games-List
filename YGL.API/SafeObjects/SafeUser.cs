@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace YGL.API.SafeObjects {
+namespace YGL.API.SafeObjects; 
+
 public class SafeUser {
     public long Id { get; set; }
     public string Username { get; set; }
@@ -40,5 +41,4 @@ public class SafeUser {
             .Concat(user.FriendFriendTwos)
             .Select(friend => friend.FriendOneId != this.Id ? friend.FriendOneId : friend.FriendTwoId);
     }
-}
 }

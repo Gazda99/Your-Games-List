@@ -1,4 +1,5 @@
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class CompanyWebsite : IIdentifier, IHasChecksum {
     public CompanyWebsiteCategory? Category { get; set; }
     public string Checksum { get; set; }
@@ -25,5 +26,4 @@ public enum CompanyWebsiteCategory {
     EpicGames = 16,
     GOG = 17,
     Discord = 18
-}
 }

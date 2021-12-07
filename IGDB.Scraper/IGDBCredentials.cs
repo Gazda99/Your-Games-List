@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 
-namespace IGDB.Scraper {
+namespace IGDB.Scraper; 
+
 public static class IGDBCredentials {
     private static readonly string ClientId = File.ReadAllLines("../../../../Twitch Data.txt")[0];
     private static readonly string Auth = File.ReadAllLines("../../../../Twitch Data.txt")[1];
@@ -10,5 +11,4 @@ public static class IGDBCredentials {
         { "Client-ID", ClientId },
         { "Authorization", Auth }
     };
-}
 }

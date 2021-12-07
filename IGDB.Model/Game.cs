@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class Game : ITimestamps, IIdentifier, IHasChecksum {
     public IdentitiesOrValues<AgeRating> AgeRatings { get; set; }
 
@@ -131,5 +132,4 @@ public enum GameStatus {
     Cancelled = 6,
     Rumored = 7,
     Delisted = 8
-}
 }

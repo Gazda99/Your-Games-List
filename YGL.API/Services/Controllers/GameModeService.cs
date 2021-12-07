@@ -11,7 +11,8 @@ using YGL.API.SafeObjects;
 using YGL.API.Services.IControllers;
 using YGL.API.Validation;
 
-namespace YGL.API.Services.Controllers {
+namespace YGL.API.Services.Controllers;
+
 public class GameModeService : IGameModeService {
     private readonly YGL.Model.YGLDataContext _yglDataContext;
 
@@ -20,7 +21,7 @@ public class GameModeService : IGameModeService {
     }
 
     public async Task<GameModeResult> GetGameModes(string gameModesIds) {
-        GameModeResult gameModeResult = new GameModeResult();
+        var gameModeResult = new GameModeResult();
 
         if (!ValidationUrl.TryParseInt(gameModesIds, gameModeResult, out List<int> ids)) {
             gameModeResult.IsSuccess = false;
@@ -28,7 +29,7 @@ public class GameModeService : IGameModeService {
             return gameModeResult;
         }
 
-        List<YGL.Model.GameMode> foundGameModes = await _yglDataContext.GameModes.Where(gm => ids.Contains(gm.Id)).ToListAsync();
+        var foundGameModes = await _yglDataContext.GameModes.Where(gm => ids.Contains(gm.Id)).ToListAsync();
 
         if (foundGameModes is null || foundGameModes.Count == 0) {
             gameModeResult.IsSuccess = false;
@@ -46,15 +47,13 @@ public class GameModeService : IGameModeService {
 
     public async Task<GameModeResult> GetGameModesFilter(GameModeFilterQuery gameModeFilterQuery,
         PaginationFilter paginationFilter) {
-        GameModeResult gameModeResult = new GameModeResult();
+        var gameModeResult = new GameModeResult();
 
-        IQueryable<YGL.Model.GameMode> gameModeQueryable = _yglDataContext.GameModes
-            .Where(gm => gm.ItemStatus == true);
+        var gameModeQueryable = _yglDataContext.GameModes.Where(gm => gm.ItemStatus == true);
 
         gameModeQueryable = AddFiltersOnQueryGetGameModes(gameModeFilterQuery, gameModeQueryable);
 
-        List<YGL.Model.GameMode> foundGameModes =
-            (await gameModeQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
+        var foundGameModes = (await gameModeQueryable.ToPaginatedListAsync(paginationFilter.Skip, paginationFilter.Take));
 
         if (foundGameModes is null || foundGameModes.Count == 0) {
             gameModeResult.IsSuccess = false;
@@ -64,7 +63,7 @@ public class GameModeService : IGameModeService {
         }
 
         gameModeResult.GameModes = foundGameModes.ConvertAll(gm => new SafeGameMode(gm));
-        
+
         gameModeResult.IsSuccess = true;
         gameModeResult.StatusCode = HttpStatusCode.OK;
         return gameModeResult;
@@ -79,5 +78,4 @@ public class GameModeService : IGameModeService {
 
         return queryable;
     }
-}
 }

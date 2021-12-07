@@ -1,4 +1,5 @@
-﻿namespace YGL.API.Services {
+﻿namespace YGL.API.Services; 
+
 public interface ICustomPasswordHasher {
     /// <summary>
     /// Used to hash password provided by the user.
@@ -16,5 +17,4 @@ public interface ICustomPasswordHasher {
     /// <param name="hashedPassword">Password stored on server</param>
     /// <returns>Bool indicating if password is valid</returns>
     public bool VerifyPassword(string password, byte[] hashedPassword, byte[] salt);
-}
 }

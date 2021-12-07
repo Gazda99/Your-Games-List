@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     [Table("Game")]
@@ -34,14 +32,19 @@ namespace YGL.Model
         public int Id { get; set; }
         public int? Category { get; set; }
         [Required]
+        [Unicode(false)]
         public string ImageId { get; set; }
         [Required]
+        [Unicode(false)]
         public string Name { get; set; }
         [Required]
+        [Unicode(false)]
         public string Storyline { get; set; }
         [Required]
+        [Unicode(false)]
         public string Slug { get; set; }
         [Required]
+        [Unicode(false)]
         public string Summary { get; set; }
         [Required]
         public bool? ItemStatus { get; set; }

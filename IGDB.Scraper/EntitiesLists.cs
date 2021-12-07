@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using YGL.Model;
 
-namespace IGDB.Scraper {
+namespace IGDB.Scraper;
+
 public class EntitiesLists {
     public Dictionary<int, YGL.Model.Game> Games = new Dictionary<int, YGL.Model.Game>();
 
@@ -58,5 +59,4 @@ public class EntitiesLists {
             GameWithWebsites = dbConnection.GameWithWebsites.ToDictionary(gw => new Tuple<int, string>(gw.GameId, gw.Url), gw => gw)
         };
     }
-}
 }

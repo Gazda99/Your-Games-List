@@ -1,8 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-
-#nullable disable
 
 namespace YGL.Model
 {
@@ -56,21 +55,14 @@ namespace YGL.Model
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.HasAnnotation("Relational:Collation", "Latin1_General_100_CI_AS_SC_UTF8");
-
+ 
             modelBuilder.Entity<Badge>(entity =>
             {
-                entity.Property(e => e.Description).IsUnicode(false);
-
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<CommentGame>(entity =>
             {
-                entity.Property(e => e.Comment).IsUnicode(false);
-
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
 
                 entity.HasOne(d => d.Game)
@@ -92,11 +84,7 @@ namespace YGL.Model
 
                 entity.Property(e => e.Country).HasDefaultValueSql("((-1))");
 
-                entity.Property(e => e.Description).IsUnicode(false);
-
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<Dlc>(entity =>
@@ -119,8 +107,6 @@ namespace YGL.Model
             modelBuilder.Entity<EmailConfirmation>(entity =>
             {
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Url).IsUnicode(false);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.EmailConfirmations)
@@ -181,17 +167,7 @@ namespace YGL.Model
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.ImageId).IsUnicode(false);
-
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
-
-                entity.Property(e => e.Slug).IsUnicode(false);
-
-                entity.Property(e => e.Storyline).IsUnicode(false);
-
-                entity.Property(e => e.Summary).IsUnicode(false);
             });
 
             modelBuilder.Entity<GameAndPlatformWithReleaseDate>(entity =>
@@ -292,8 +268,6 @@ namespace YGL.Model
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<GameWithAgeCategory>(entity =>
@@ -310,8 +284,6 @@ namespace YGL.Model
             {
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Url).IsUnicode(false);
-
                 entity.HasOne(d => d.Game)
                     .WithMany(p => p.GameWithWebsites)
                     .HasForeignKey(d => d.GameId)
@@ -323,19 +295,11 @@ namespace YGL.Model
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<Group>(entity =>
             {
-                entity.Property(e => e.Description).IsUnicode(false);
-
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
-
-                entity.Property(e => e.Slug).IsUnicode(false);
 
                 entity.HasOne(d => d.Creator)
                     .WithMany(p => p.Groups)
@@ -384,11 +348,7 @@ namespace YGL.Model
 
             modelBuilder.Entity<ListOfGame>(entity =>
             {
-                entity.Property(e => e.Description).IsUnicode(false);
-
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
 
                 entity.HasOne(d => d.Owner)
                     .WithMany(p => p.ListOfGames)
@@ -401,8 +361,6 @@ namespace YGL.Model
             {
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Url).IsUnicode(false);
-
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.PasswordResets)
                     .HasForeignKey(d => d.UserId)
@@ -412,8 +370,6 @@ namespace YGL.Model
             modelBuilder.Entity<PasswordReset2>(entity =>
             {
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Token).IsUnicode(false);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.PasswordReset2s)
@@ -425,11 +381,7 @@ namespace YGL.Model
             {
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Abbr).IsUnicode(false);
-
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<PlayerPerspective>(entity =>
@@ -437,17 +389,11 @@ namespace YGL.Model
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<RefreshToken>(entity =>
             {
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.JwtId).IsUnicode(false);
-
-                entity.Property(e => e.Token).IsUnicode(false);
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.RefreshTokens)
@@ -460,25 +406,15 @@ namespace YGL.Model
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
-
-                entity.Property(e => e.Name).IsUnicode(false);
             });
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.Property(e => e.About).IsUnicode(false);
-
-                entity.Property(e => e.Email).IsUnicode(false);
-
-                entity.Property(e => e.HashedPassword).IsFixedLength(true);
+                entity.Property(e => e.HashedPassword).IsFixedLength();
 
                 entity.Property(e => e.ItemStatus).HasDefaultValueSql("((1))");
 
-                entity.Property(e => e.Salt).IsFixedLength(true);
-
-                entity.Property(e => e.Slug).IsUnicode(false);
-
-                entity.Property(e => e.Username).IsUnicode(false);
+                entity.Property(e => e.Salt).IsFixedLength();
             });
 
             modelBuilder.Entity<UserHasBadge>(entity =>

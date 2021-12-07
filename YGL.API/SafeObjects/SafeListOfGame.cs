@@ -1,4 +1,5 @@
-﻿namespace YGL.API.SafeObjects {
+﻿namespace YGL.API.SafeObjects; 
+
 public class SafeListOfGame {
     public long Id { get; set; }
     public long OwnerId { get; set; }
@@ -16,5 +17,4 @@ public class SafeListOfGame {
         this.IsDefault = listOfGame.IsDefault;
         this.IsPublic = listOfGame.IsPublic;
     }
-}
 }

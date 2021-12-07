@@ -1,7 +1,8 @@
 ﻿using System;
 using YGL.API.Contracts.V1.Requests;
 
-namespace YGL.API.Domain {
+namespace YGL.API.Domain; 
+
 public class PaginationFilter {
     public const int SkipMin = 0;
     public const int SkipMax = Int32.MaxValue;
@@ -42,5 +43,4 @@ public class PaginationFilter {
     public static int SetTake(int take) {
         return take is >= TakeMin and <=TakeMax ? take : TakeDefaults;
     }
-}
 }

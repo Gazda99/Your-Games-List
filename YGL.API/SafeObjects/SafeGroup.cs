@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace YGL.API.SafeObjects {
+namespace YGL.API.SafeObjects; 
+
 public class SafeGroup {
     public long Id { get; set; }
     public long CreatorId { get; set; }
@@ -26,5 +27,4 @@ public class SafeGroup {
 
         this.UsersInGroup = group.GroupHasUsers.Select(ghu => ghu.UserId);
     }
-}
 }

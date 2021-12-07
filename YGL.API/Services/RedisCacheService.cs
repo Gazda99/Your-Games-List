@@ -5,7 +5,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using StackExchange.Redis;
 
-namespace YGL.API.Services {
+namespace YGL.API.Services; 
+
 public class RedisCacheService : IRedisCacheService {
     private readonly IDistributedCache _distributedCache;
     private readonly IConnectionMultiplexer _redisServer;
@@ -24,13 +25,13 @@ public class RedisCacheService : IRedisCacheService {
         if (response is null)
             return;
 
-        string serializedResponse = JsonConvert.SerializeObject(response, _serializerSettings);
+        var serializedResponse = JsonConvert.SerializeObject(response, _serializerSettings);
 
         await _distributedCache.SetStringAsync(cacheKey, serializedResponse, SetCacheEntryOptions(timeToLive));
     }
 
     public async Task<string> GetCachedResponseAsync(string cacheKey) {
-        string cachedResponse = await _distributedCache.GetStringAsync(cacheKey);
+        var cachedResponse = await _distributedCache.GetStringAsync(cacheKey);
         return string.IsNullOrEmpty(cachedResponse) ? null : cachedResponse;
     }
 
@@ -43,5 +44,4 @@ public class RedisCacheService : IRedisCacheService {
     public async Task RemoveKeyAsync(string key) {
         await _distributedCache.RemoveAsync(key);
     }
-}
 }

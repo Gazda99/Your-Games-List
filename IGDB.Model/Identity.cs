@@ -1,6 +1,7 @@
 using System.Linq;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class IdentityOrValue<T> where T : class {
     public long? Id { get; private set; }
 
@@ -36,5 +37,4 @@ public class IdentitiesOrValues<T> where T : class {
         var list = values.Select(value => (T)value).ToArray();
         Values = list;
     }
-}
 }

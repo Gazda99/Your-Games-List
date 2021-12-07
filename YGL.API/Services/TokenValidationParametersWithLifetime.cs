@@ -3,7 +3,8 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using YGL.API.Settings;
 
-namespace YGL.API.Services {
+namespace YGL.API.Services; 
+
 public class TokenValidationParametersWithLifetime : TokenValidationParameters {
     public TokenValidationParametersWithLifetime(JwtSettings jwtSettings) {
         ValidateIssuerSigningKey = true;
@@ -14,5 +15,4 @@ public class TokenValidationParametersWithLifetime : TokenValidationParameters {
         ValidateLifetime = true;
         ClockSkew = TimeSpan.Zero;
     }
-}
 }

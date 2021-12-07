@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.EnumTypes {
+namespace YGL.API.EnumTypes; 
+
 public static class Gender {
     public const string NotSpecified = "Not Specified";
     public const string Male = "Male";
@@ -26,7 +27,4 @@ public enum Genders {
     Male = 1,
     Female = 2,
     Other = 3
-}
-
-
 }

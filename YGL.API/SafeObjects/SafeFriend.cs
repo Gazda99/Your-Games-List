@@ -1,6 +1,7 @@
 ﻿using System;
 
-namespace YGL.API.SafeObjects {
+namespace YGL.API.SafeObjects; 
+
 public class SafeFriend {
     public long Id { get; set; }
     public long FriendOneId { get; set; }
@@ -13,5 +14,4 @@ public class SafeFriend {
         this.FriendTwoId = friend.FriendTwoId;
         this.Since = friend.Since;
     }
-}
 }

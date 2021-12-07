@@ -1,4 +1,5 @@
-﻿namespace YGL.API.Contracts.V1.Responses {
+﻿namespace YGL.API.Contracts.V1.Responses; 
+
 public class SingleResponse<T> : IResponse where T : IObjectForResponse {
     public SingleResponse() { }
 
@@ -7,5 +8,4 @@ public class SingleResponse<T> : IResponse where T : IObjectForResponse {
     }
 
     public T Data { get; set; }
-}
 }

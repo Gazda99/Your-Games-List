@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.Contracts.V1.Responses {
+namespace YGL.API.Contracts.V1.Responses; 
+
 public class PagedResponse<T> : IResponse where T : IObjectForResponse {
     public PagedResponse() { }
 
@@ -14,5 +15,4 @@ public class PagedResponse<T> : IResponse where T : IObjectForResponse {
     public int? Skipped { get; set; }
 
     public int NextAt { get; set; }
-}
 }

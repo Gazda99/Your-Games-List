@@ -2,7 +2,8 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace IGDB.Model.Serialization {
+namespace IGDB.Model.Serialization; 
+
 public class UnixTimestampConverter : JsonConverter {
     public override bool CanConvert(Type objectType) {
         return objectType.IsAssignableFrom(typeof(DateTimeOffset));
@@ -39,5 +40,4 @@ public class UnixTimestampConverter : JsonConverter {
             JToken.FromObject(value).WriteTo(writer);
         }
     }
-}
 }

@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class Theme : ITimestamps, IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
     public DateTimeOffset? CreatedAt { get; set; }
@@ -9,5 +10,4 @@ public class Theme : ITimestamps, IIdentifier, IHasChecksum {
     public string Slug { get; set; }
     public DateTimeOffset? UpdatedAt { get; set; }
     public string Url { get; set; }
-}
 }

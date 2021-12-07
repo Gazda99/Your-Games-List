@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class Platform : ITimestamps, IIdentifier, IHasChecksum {
     public string Abbreviation { get; set; }
     public string AlternativeName { get; set; }
@@ -27,5 +28,4 @@ public enum PlatformCategory {
     OperatingSystem = 4,
     PortableConsole = 5,
     Computer = 6
-}
 }

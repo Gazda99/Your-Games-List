@@ -1,6 +1,7 @@
 using System;
 
-namespace IGDB.Model {
+namespace IGDB.Model; 
+
 public class GameEngine : ITimestamps, IIdentifier, IHasChecksum {
     public string Checksum { get; set; }
 
@@ -20,5 +21,4 @@ public class GameEngine : ITimestamps, IIdentifier, IHasChecksum {
 
     public DateTimeOffset? UpdatedAt { get; set; }
     public string Url { get; set; }
-}
 }

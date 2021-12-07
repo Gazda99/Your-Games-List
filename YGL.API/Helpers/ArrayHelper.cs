@@ -1,4 +1,5 @@
-﻿namespace YGL.API.Helpers {
+﻿namespace YGL.API.Helpers; 
+
 public static class ArrayHelper {
     public static bool CompareTwoByteArrays(byte[] array1, byte[] array2) {
         if (array1.Length != array2.Length)
@@ -11,5 +12,4 @@ public static class ArrayHelper {
 
         return true;
     }
-}
 }

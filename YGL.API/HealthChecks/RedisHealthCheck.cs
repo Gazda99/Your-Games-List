@@ -5,7 +5,8 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using StackExchange.Redis;
 using YGL.API.Settings;
 
-namespace YGL.API.HealthChecks {
+namespace YGL.API.HealthChecks; 
+
 public class RedisHealthCheck : IHealthCheck {
     private const string HealthCheckTestKey = "health-check-test";
     private readonly RedisCacheSettings _redisCacheSettings;
@@ -36,5 +37,4 @@ public class RedisHealthCheck : IHealthCheck {
             return Task.FromResult(HealthCheckResult.Unhealthy(ex.Message));
         }
     }
-}
 }

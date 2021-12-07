@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.Contracts.V1.Responses {
+namespace YGL.API.Contracts.V1.Responses; 
+
 public class ResponseWithError<T> : IResponseWithErrors where T : IObjectForResponseWithErrors {
     public ResponseWithError() { }
 
@@ -12,5 +13,4 @@ public class ResponseWithError<T> : IResponseWithErrors where T : IObjectForResp
 
     public IList<string> ErrorMessages { get; set; }
     public IList<int> ErrorCodes { get; set; }
-}
 }

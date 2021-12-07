@@ -1,4 +1,5 @@
-﻿namespace YGL.API.SafeObjects {
+﻿namespace YGL.API.SafeObjects; 
+
 public class SafeGenre {
     public int Id { get; set; }
 
@@ -8,5 +9,4 @@ public class SafeGenre {
         this.Id = genre.Id;
         this.Name = genre.Name;
     }
-}
 }

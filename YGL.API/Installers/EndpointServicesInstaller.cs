@@ -3,7 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using YGL.API.Services.Controllers;
 using YGL.API.Services.IControllers;
 
-namespace YGL.API.Installers {
+namespace YGL.API.Installers; 
+
 public class EndpointServicesInstaller : IInstaller {
     public void InstallServices(IServiceCollection services, IConfiguration configuration) {
         services.AddScoped<IIdentityService, IdentityService>();
@@ -14,5 +15,4 @@ public class EndpointServicesInstaller : IInstaller {
         services.AddScoped<IPlatformService, PlatformService>();
         services.AddScoped<IPlayerPerspectiveService, PlayerPerspectiveService>();
     }
-}
 }

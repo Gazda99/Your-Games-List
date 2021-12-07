@@ -2,18 +2,18 @@
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace IGDB.Scraper {
+namespace IGDB.Scraper;
+
 class Program {
     static async Task Main(string[] args) {
         DbContextOptionsBuilder<YGL.Model.YGLDataContext> optionsBuilder =
             new DbContextOptionsBuilder<YGL.Model.YGLDataContext>();
 
-        string sqlConnectionString =
-            (await File.ReadAllLinesAsync("../../../../Twitch Data.txt"))[2].Replace(@"\\", @"\");
-        
+        var sqlConnectionString = (await File.ReadAllLinesAsync("../../../../Twitch Data.txt"))[2].Replace(@"\\", @"\");
+
         optionsBuilder.UseSqlServer(sqlConnectionString);
 
-        YGL.Model.YGLDataContext dbConnection = new YGL.Model.YGLDataContext(optionsBuilder.Options);
+        var dbConnection = new YGL.Model.YGLDataContext(optionsBuilder.Options);
         await dbConnection.Database.OpenConnectionAsync();
 
         await Scrape(dbConnection);
@@ -22,7 +22,7 @@ class Program {
     }
 
     private static async Task Scrape(YGL.Model.YGLDataContext dbConnection) {
-        Scrapers scrapers = new Scrapers(dbConnection) {
+        var scrapers = new Scrapers(dbConnection) {
             LimitInOneRequest = 500,
             Lop = 1
         };
@@ -36,5 +36,4 @@ class Program {
         await scrapers.ScrapeCompanies();
         await scrapers.ScrapeGames();
     }
-}
 }

@@ -4,8 +4,6 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
 
-#nullable disable
-
 namespace YGL.Model
 {
     public partial class ListOfGame
@@ -20,9 +18,11 @@ namespace YGL.Model
         public long OwnerId { get; set; }
         [Required]
         [StringLength(50)]
+        [Unicode(false)]
         public string Name { get; set; }
         [Required]
         [StringLength(1000)]
+        [Unicode(false)]
         public string Description { get; set; }
         public bool IsDefault { get; set; }
         public bool IsPublic { get; set; }
