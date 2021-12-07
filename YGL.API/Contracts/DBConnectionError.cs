@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
-using YGL.API.Errors;
+using YGL.API.Contracts.V1.Responses;
 
-namespace YGL.API.Contracts.V1.Responses; 
+namespace YGL.API.Contracts;
 
-public class GeneralForbiddenForRes : IObjectForResponseWithErrors {
+public class DbConnectionErrorRes : IObjectForResponseWithErrors {
     public IList<string> ErrorMessages { get; set; }
     public IList<int> ErrorCodes { get; set; }
 }

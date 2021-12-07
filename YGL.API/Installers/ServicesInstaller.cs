@@ -2,11 +2,11 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace YGL.API.Installers; 
+namespace YGL.API.Installers;
 
 public class ServicesInstaller {
     public void InstallServicesInOrder(IServiceCollection services, IConfiguration configuration) {
-        List<IInstaller> installers = new List<IInstaller>() {
+        var installers = new List<IInstaller>() {
             new OtherSettingsInstaller(),
             new SwaggerInstaller(),
             new DbInstaller(),
@@ -16,9 +16,9 @@ public class ServicesInstaller {
             new PasswordHasherInstaller(),
 
             new RedisCacheInstaller(),
-            
+
             new HealthChecksInstaller(),
-            
+
             new EndpointServicesInstaller(),
         };
 

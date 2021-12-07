@@ -40,6 +40,9 @@ validation
 			game mode 2012
 			platform 2013
 			player perspective 2014
+			
+		other errors 9XXX
+	
 	
 	
 	additional info:
