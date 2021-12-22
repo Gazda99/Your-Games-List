@@ -5,13 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
-using YGL.API.Contracts.V1.Responses;
 using YGL.API.Contracts.V1.Responses.Identity;
 using YGL.API.Errors;
 using YGL.API.Services;
 using YGL.API.Settings;
 
-namespace YGL.API.Installers; 
+namespace YGL.API.Installers;
 
 public class JwtInstaller : IInstaller {
     public void InstallServices(IServiceCollection services, IConfiguration configuration) {
@@ -22,7 +21,7 @@ public class JwtInstaller : IInstaller {
         var tokenValidationParametersWithLifetime = new TokenValidationParametersWithLifetime(jwtSettings);
 
         var tokenValidationParametersWithoutLifetime = new TokenValidationParametersWithoutLifetime(jwtSettings);
-        
+
         services.AddSingleton(tokenValidationParametersWithLifetime);
         services.AddSingleton(tokenValidationParametersWithoutLifetime);
 
@@ -50,8 +49,6 @@ public class JwtInstaller : IInstaller {
         context.Response.ContentType = ContentTypes.ApplicationJson;
         context.Response.StatusCode = 403;
         
-        tokenValidationFailRes.ToSingleResponse();
-
         return context.Response.WriteAsync(JsonConvert.SerializeObject(tokenValidationFailRes));
     }
 
@@ -66,11 +63,11 @@ public class JwtInstaller : IInstaller {
 
         else
             tokenValidationFailRes.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.JwtTokenValidationError);
-        
+
         context.Response.ContentType = ContentTypes.ApplicationJson;
         context.Response.StatusCode = (int)HttpStatusCode.Unauthorized;
-        
-        tokenValidationFailRes.ToSingleResponse();
+
+        // var res = tokenValidationFailRes.ToSingleResponse();
 
         return context.Response.WriteAsync(JsonConvert.SerializeObject(tokenValidationFailRes));
     }

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace YGL.API.Errors; 
+namespace YGL.API.Errors;
 
 public class ApiErrors : IErrorContainer<ApiErrorCodes> {
     public Dictionary<ApiErrorCodes, string> Errors { get; set; } = new Dictionary<ApiErrorCodes, string>() {
@@ -78,6 +78,9 @@ public class ApiErrors : IErrorContainer<ApiErrorCodes> {
         { ApiErrorCodes.GameModeNotFound, "Game mode not found." },
         { ApiErrorCodes.PlatformNotFound, "Platform not found." },
         { ApiErrorCodes.PlayerPerspectiveNotFound, "Player perspective not found." },
+
+        { ApiErrorCodes.DbConnectionError, "Server could not connect to YGL Database." },
+        { ApiErrorCodes.UnspecifiedError, "Cannot identify exception." },
     };
 }
 
@@ -158,4 +161,8 @@ public enum ApiErrorCodes {
     GameModeNotFound = 2012_40_01,
     PlatformNotFound = 2013_40_01,
     PlayerPerspectiveNotFound = 2014_40_01,
+
+    DbConnectionError = 9000_80_01,
+
+    UnspecifiedError= 9900_80_01
 }

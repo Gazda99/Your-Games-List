@@ -5,10 +5,13 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using StackExchange.Redis;
 using YGL.API.Settings;
 
-namespace YGL.API.HealthChecks; 
+namespace YGL.API.HealthChecks;
 
 public class RedisHealthCheck : IHealthCheck {
     private const string HealthCheckTestKey = "health-check-test";
+    private const string RedisCacheDisabledMessage = "Redis cache is disabled.";
+    private const string RedisCacheNotWorking = "Reds cache not working";
+    private const string NoneDescription = "none";
     private readonly RedisCacheSettings _redisCacheSettings;
     private readonly IConnectionMultiplexer _connectionMultiplexer;
 
@@ -22,10 +25,9 @@ public class RedisHealthCheck : IHealthCheck {
 
     public Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context,
         CancellationToken cancellationToken = new CancellationToken()) {
-        const string redisCacheDisabledMessage = "Redis cache is disabled.";
-
         if (!_redisCacheSettings.Enabled)
-            return Task.FromResult(HealthCheckResult.Unhealthy(redisCacheDisabledMessage));
+            return Task.FromResult(HealthCheckResult.Unhealthy(RedisCacheDisabledMessage));
+
 
         try {
             IDatabase redisDb = _connectionMultiplexer.GetDatabase();
@@ -34,7 +36,7 @@ public class RedisHealthCheck : IHealthCheck {
         }
 
         catch (Exception ex) {
-            return Task.FromResult(HealthCheckResult.Unhealthy(ex.Message));
+            return Task.FromResult(HealthCheckResult.Unhealthy(RedisCacheNotWorking));
         }
     }
 }

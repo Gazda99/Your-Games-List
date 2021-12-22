@@ -38,7 +38,7 @@ Skip - how many items to skip. Default is 0.
 Take - how many items to be requested. Default and Max is 100.
 
 ```
-api/{version}/{controller}?queryParam=exampleName&skip=10&take=100
+/api/{version}/{controller}?queryParam=exampleName&skip=10&take=100
 ```
 
 Those requests will get response:
@@ -171,7 +171,7 @@ No support for multiple ids requesting and additional query parameters like take
 
 They all starts with:
 ```
-identity/{version}/
+/identity/{version}/
 ```
 
 
@@ -321,6 +321,28 @@ Response:
 | Field |Type|
 |-|-|
 |isSuccess|bool|
+---
+# Health Checks
+Api provides ability to check status of specific services.
+```
+/health
+```
+Reponse:
+```
+{
+  "status": ,
+  "checks": [
+    {
+      "status": "",
+      "component": "",
+      "description": ""
+    }
+  ],
+  "duration": "",
+  "date": ""
+}
+```
+
 ---
 # Errors
 All errors have same structure:
