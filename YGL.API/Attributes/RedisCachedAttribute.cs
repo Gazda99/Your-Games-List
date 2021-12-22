@@ -46,7 +46,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
             return;
         }
 
-        if (!String.IsNullOrEmpty(cachedResponse)) {
+        if (!string.IsNullOrEmpty(cachedResponse)) {
             context.Result = new OkObjectResult(cachedResponse);
             return;
         }
@@ -107,7 +107,7 @@ public class RedisCachedAttribute : Attribute, IAsyncActionFilter {
     }
 
     private static int GetValueFromQuery(IQueryCollection query, string key) {
-        Int32.TryParse(query[key].ToString(), out int value);
+        int.TryParse(query[key].ToString(), out int value);
         return value;
     }
 

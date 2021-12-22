@@ -75,7 +75,7 @@ public class CompanyService : ICompanyService {
         IQueryable<YGL.Model.Company> queryable) {
         if (filterQuery is null) return queryable;
 
-        if (!String.IsNullOrEmpty(filterQuery.CompanyName))
+        if (!string.IsNullOrEmpty(filterQuery.CompanyName))
             queryable = queryable.Where(c => c.Name.Contains(filterQuery.CompanyName));
 
         return queryable;

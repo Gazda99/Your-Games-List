@@ -151,7 +151,7 @@ public class UserService : IUserService {
         IQueryable<YGL.Model.User> queryable) {
         if (filterQuery is null) return queryable;
 
-        if (!String.IsNullOrEmpty(filterQuery.Username))
+        if (!string.IsNullOrEmpty(filterQuery.Username))
             queryable = queryable.Where(u => u.Username.Contains(filterQuery.Username));
 
         if (filterQuery.ShowInactive == true)

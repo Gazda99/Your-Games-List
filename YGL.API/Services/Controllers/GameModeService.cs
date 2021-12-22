@@ -73,7 +73,7 @@ public class GameModeService : IGameModeService {
         IQueryable<YGL.Model.GameMode> queryable) {
         if (filterQuery is null) return queryable;
 
-        if (!String.IsNullOrEmpty(filterQuery.GameModeName))
+        if (!string.IsNullOrEmpty(filterQuery.GameModeName))
             queryable = queryable.Where(gm => gm.Name.Contains(filterQuery.GameModeName));
 
         return queryable;

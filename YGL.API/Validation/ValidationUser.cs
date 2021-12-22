@@ -50,7 +50,7 @@ public static class ValidationUser {
     }
 
     public static bool ValidateUsername(string username, IErrorList errorList) {
-        if (String.IsNullOrEmpty(username) || (!ValidationHelpers.CheckMinLength(username, UsernameMinLength))) {
+        if (string.IsNullOrEmpty(username) || (!ValidationHelpers.CheckMinLength(username, UsernameMinLength))) {
             errorList.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.UsernameIsTooShort);
             return false;
         }
@@ -70,7 +70,7 @@ public static class ValidationUser {
     }
 
     public static bool ValidatePassword(string password, IErrorList errorList) {
-        if (String.IsNullOrEmpty(password) || !ValidationHelpers.CheckMinLength(password, PasswordMinLength)) {
+        if (string.IsNullOrEmpty(password) || !ValidationHelpers.CheckMinLength(password, PasswordMinLength)) {
             errorList.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.PasswordIsTooShort);
             return false;
         }
@@ -94,7 +94,7 @@ public static class ValidationUser {
     }
 
     public static bool ValidateSlug(string slug, IErrorList errorList) {
-        if (String.IsNullOrEmpty(slug)) {
+        if (string.IsNullOrEmpty(slug)) {
             return true;
         }
 

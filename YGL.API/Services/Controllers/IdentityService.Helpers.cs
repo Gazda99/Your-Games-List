@@ -41,11 +41,10 @@ public partial class IdentityService {
         var jwtExpiryDateString = tokenInVerification.Claims
             .FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp)?.Value;
 
-        if (String.IsNullOrEmpty(jwtExpiryDateString))
+        if (string.IsNullOrEmpty(jwtExpiryDateString))
             throw new ArgumentNullException();
 
-        long utcExpiryDate = Int64.Parse(jwtExpiryDateString);
-        Console.WriteLine(utcExpiryDate);
+        long utcExpiryDate = long.Parse(jwtExpiryDateString);
 
         var expiryDate = DateTime.UnixEpoch.AddSeconds(utcExpiryDate);
 

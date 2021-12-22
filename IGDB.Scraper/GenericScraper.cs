@@ -55,7 +55,7 @@ public class GenericScraper {
 
             IEnumerable<ScrapeResult<T>> tasksResults = await Task.WhenAll(tasks);
 
-            foreach (ScrapeResult<T> scrapedResult in tasksResults) {
+            foreach (var scrapedResult in tasksResults) {
                 if (!scrapedResult.IsSuccess)
                     condition = false;
                 else
@@ -103,7 +103,8 @@ public class GenericScraper {
 
         sb.Append($"Task {taskId} trying to deserialize {type} {offset} - {offset + limit} \n");
 
-        var deserializeObjects = JsonConvert.DeserializeObject<List<T>>(stringRes, JsonDeserializerSettings.DefaultJsonSerializerSettings);
+        var deserializeObjects =
+            JsonConvert.DeserializeObject<List<T>>(stringRes, JsonDeserializerSettings.DefaultJsonSerializerSettings);
 
         if (deserializeObjects is null) {
             scrapeResult.IsSuccess = false;

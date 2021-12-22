@@ -74,7 +74,7 @@ public class PlayerPerspectiveService : IPlayerPerspectiveService {
         IQueryable<YGL.Model.PlayerPerspective> queryable) {
         if (filterQuery is null) return queryable;
 
-        if (!String.IsNullOrEmpty(filterQuery.PlayerPerspectiveName))
+        if (!string.IsNullOrEmpty(filterQuery.PlayerPerspectiveName))
             queryable = queryable.Where(p => p.Name.Contains(filterQuery.PlayerPerspectiveName));
 
         return queryable;

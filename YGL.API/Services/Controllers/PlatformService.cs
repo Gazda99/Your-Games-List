@@ -74,7 +74,7 @@ public class PlatformService : IPlatformService {
         IQueryable<YGL.Model.Platform> queryable) {
         if (filterQuery is null) return queryable;
 
-        if (!String.IsNullOrEmpty(filterQuery.PlatformName))
+        if (!string.IsNullOrEmpty(filterQuery.PlatformName))
             queryable = queryable.Where(p => p.Name.Contains(filterQuery.PlatformName));
 
         return queryable;

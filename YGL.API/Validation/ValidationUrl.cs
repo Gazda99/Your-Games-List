@@ -13,7 +13,7 @@ public static class ValidationUrl {
     public static bool TryParseInt(string url, IErrorList errorList, out List<int> ids) {
         try {
             //check for null or empty
-            if (String.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url))
                 throw new CannotParseIdListInUriException(CannotParseIdListInUriException.BadValue);
 
             ids = new List<int>();
@@ -23,8 +23,8 @@ public static class ValidationUrl {
                 if (split.Contains(Range)) {
                     string[] s = split.Split(Range);
 
-                    if (s[0] == String.Empty) {
-                        if (s[1] == String.Empty)
+                    if (s[0] == string.Empty) {
+                        if (s[1] == string.Empty)
                             throw new CannotParseIdListInUriException(CannotParseIdListInUriException.BadValue);
                         else
                             throw new CannotParseIdListInUriException(CannotParseIdListInUriException.NonPositiveId);
@@ -61,7 +61,7 @@ public static class ValidationUrl {
     public static bool TryParseLong(string url, IErrorList errorList, out List<long> ids) {
         try {
             //check for null or empty
-            if (String.IsNullOrEmpty(url))
+            if (string.IsNullOrEmpty(url))
                 throw new CannotParseIdListInUriException(CannotParseIdListInUriException.BadValue);
 
             ids = new List<long>();
@@ -71,8 +71,8 @@ public static class ValidationUrl {
                 if (split.Contains(Range)) {
                     string[] s = split.Split(Range);
 
-                    if (s[0] == String.Empty) {
-                        if (s[1] == String.Empty)
+                    if (s[0] == string.Empty) {
+                        if (s[1] == string.Empty)
                             throw new CannotParseIdListInUriException(CannotParseIdListInUriException.BadValue);
                         else
                             throw new CannotParseIdListInUriException(CannotParseIdListInUriException.NonPositiveId);
@@ -135,7 +135,7 @@ public static class ValidationUrl {
 
     private static int ParseSingleIdInt(string value) {
         try {
-            int id = Int32.Parse(value.Trim());
+            int id = int.Parse(value.Trim());
             return id;
         }
         catch (Exception) {
@@ -145,7 +145,7 @@ public static class ValidationUrl {
 
     private static long ParseSingleIdLong(string value) {
         try {
-            long id = Int64.Parse(value.Trim());
+            long id = long.Parse(value.Trim());
             return id;
         }
         catch (Exception) {

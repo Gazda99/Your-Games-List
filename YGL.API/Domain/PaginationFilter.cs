@@ -5,7 +5,7 @@ namespace YGL.API.Domain;
 
 public class PaginationFilter {
     public const int SkipMin = 0;
-    public const int SkipMax = Int32.MaxValue;
+    public const int SkipMax = int.MaxValue;
     public const int SkipDefault = SkipMin;
 
     public const int TakeMin = 1;

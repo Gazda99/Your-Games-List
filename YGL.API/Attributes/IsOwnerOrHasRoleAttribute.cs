@@ -16,7 +16,7 @@ public class IsOwnerOrHasRoleAttribute : ForbiddenActionFilterAttribute {
         try {
             string pathValue = context.HttpContext.Request.Path.Value;
 
-            if (String.IsNullOrEmpty(pathValue) || String.IsNullOrWhiteSpace(pathValue)) {
+            if (string.IsNullOrEmpty(pathValue) || string.IsNullOrWhiteSpace(pathValue)) {
                 ReturnForbidden(context);
                 return;
             }
@@ -24,8 +24,8 @@ public class IsOwnerOrHasRoleAttribute : ForbiddenActionFilterAttribute {
             long claimUserId;
             long requestItemId;
             try {
-                claimUserId = Int64.Parse(context.HttpContext.User.Claims.First(c => c.Type == "Id").Value);
-                requestItemId = Int64.Parse(pathValue.Split('/').Last().Trim());
+                claimUserId = long.Parse(context.HttpContext.User.Claims.First(c => c.Type == "Id").Value);
+                requestItemId = long.Parse(pathValue.Split('/').Last().Trim());
             }
             catch (Exception) {
                 ReturnForbidden(context);

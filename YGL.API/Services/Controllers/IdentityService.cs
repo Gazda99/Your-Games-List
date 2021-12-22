@@ -117,7 +117,7 @@ public partial class IdentityService : IIdentityService {
             Salt = salt,
             CreatedAt = DateTime.UtcNow,
             BirthYear = -1, //not specified
-            About = String.Empty,
+            About = string.Empty,
             IsEmailConfirmed = false,
             Gender = (byte)Gender.Default, //not specified
             Country = (short)Country.Default, //not specified
@@ -332,7 +332,7 @@ public partial class IdentityService : IIdentityService {
     public async Task<EmailConfirmationResult> ConfirmEmailAsync(string url) {
         var emailConfirmationResult = new EmailConfirmationResult();
 
-        if (String.IsNullOrEmpty(url)) {
+        if (string.IsNullOrEmpty(url)) {
             emailConfirmationResult.IsSuccess = false;
             emailConfirmationResult.StatusCode = HttpStatusCode.UnprocessableEntity;
             emailConfirmationResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes
@@ -345,7 +345,7 @@ public partial class IdentityService : IIdentityService {
         long userId;
         try {
             urlSplit = url.Split('_', 2);
-            userId = Int64.Parse(urlSplit[0]);
+            userId = long.Parse(urlSplit[0]);
         }
         catch (Exception) {
             emailConfirmationResult.IsSuccess = false;
@@ -518,7 +518,7 @@ public partial class IdentityService : IIdentityService {
     public async Task<PasswordResetResult> ConfirmResetPasswordAsync(string url) {
         var passwordResetResult = new PasswordResetResult();
 
-        if (String.IsNullOrEmpty(url)) {
+        if (string.IsNullOrEmpty(url)) {
             passwordResetResult.IsSuccess = false;
             passwordResetResult.StatusCode = HttpStatusCode.UnprocessableEntity;
             passwordResetResult.AddErrors<ApiErrors, ApiErrorCodes>(ApiErrorCodes.PasswordResetEmailNotValid);
@@ -529,7 +529,7 @@ public partial class IdentityService : IIdentityService {
         long userId;
         try {
             urlSplit = url.Split('_', 2);
-            userId = Int64.Parse(urlSplit[0]);
+            userId = long.Parse(urlSplit[0]);
         }
         catch (Exception) {
             passwordResetResult.IsSuccess = false;

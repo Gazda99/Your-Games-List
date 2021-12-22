@@ -72,7 +72,7 @@ public class GenreService : IGenreService {
         IQueryable<YGL.Model.Genre> queryable) {
         if (filterQuery is null) return queryable;
 
-        if (!String.IsNullOrEmpty(filterQuery.GenreName))
+        if (!string.IsNullOrEmpty(filterQuery.GenreName))
             queryable = queryable.Where(g => g.Name.Contains(filterQuery.GenreName));
 
         return queryable;

@@ -24,8 +24,8 @@ public class Scrapers {
 
     private readonly YGL.Model.YGLDataContext _dbConnection;
 
-    private List<Tuple<int, int>> _dlcs;
-    private List<Tuple<int, int>> _expansions;
+    private List<(int baseId, int dlcId)> _dlcs;
+    private List<(int baseId, int expansionId)> _expansions;
 
     public Scrapers(YGL.Model.YGLDataContext dbConnection) {
         this._dbConnection = dbConnection;
@@ -52,8 +52,8 @@ public class Scrapers {
         const string customQuery =
             "fields id,category, name, storyline, slug, summary, cover.image_id, involved_companies.company.id, involved_companies.supporting, involved_companies.porting, involved_companies.publisher, involved_companies.developer, release_dates.date, release_dates.platform.id, game_modes, genres, player_perspectives, age_ratings.category, age_ratings.rating, themes, websites.category, websites.url, dlcs, expansions;";
 
-        _dlcs = new List<Tuple<int, int>>();
-        _expansions = new List<Tuple<int, int>>();
+        _dlcs = new List<(int, int)>();
+        _expansions = new List<(int, int)>();
 
         await ScrapeConvertAndAddOrUpdateItem<IGDB.Model.Game>("games", null, customQuery);
     }
@@ -126,8 +126,8 @@ public class Scrapers {
 
             preload = new EntitiesLists() {
                 Games = _dbConnection.Games.ToDictionary(g => g.Id, x => x),
-                Dlcs = _dbConnection.Dlcs.ToDictionary(d => new Tuple<int, int>(d.GameBaseId, d.GameDlcId), d => d),
-                Expansions = _dbConnection.Expansions.ToDictionary(e => new Tuple<int, int>(e.GameBaseId, e.GameExpansionId), e => e)
+                Dlcs = _dbConnection.Dlcs.ToDictionary(d => (d.GameBaseId, d.GameDlcId), d => d),
+                Expansions = _dbConnection.Expansions.ToDictionary(e => (e.GameBaseId, e.GameExpansionId), e => e)
             };
 
             AddOrUpdateDlcOrExpansion(preload);
@@ -156,8 +156,8 @@ public class Scrapers {
 
         var newItem = new YGL.Model.Company() {
             Id = (int)scrapedItem.Id,
-            Name = scrapedItem.Name ?? String.Empty,
-            Description = scrapedItem.Description ?? String.Empty,
+            Name = scrapedItem.Name ?? string.Empty,
+            Description = scrapedItem.Description ?? string.Empty,
             Country = (short?)scrapedItem.Country ?? -1,
             ItemStatus = true
         };
@@ -185,7 +185,7 @@ public class Scrapers {
 
         var newItem = new YGL.Model.PlayerPerspective() {
             Id = (int)scrapedItem.Id,
-            Name = scrapedItem.Name ?? String.Empty,
+            Name = scrapedItem.Name ?? string.Empty,
             ItemStatus = true
         };
 
@@ -211,8 +211,8 @@ public class Scrapers {
 
         var newItem = new YGL.Model.Platform() {
             Id = (int)scrapedItem.Id,
-            Name = scrapedItem.Name ?? String.Empty,
-            Abbr = scrapedItem.Abbreviation ?? String.Empty,
+            Name = scrapedItem.Name ?? string.Empty,
+            Abbr = scrapedItem.Abbreviation ?? string.Empty,
             ItemStatus = true
         };
 
@@ -237,7 +237,7 @@ public class Scrapers {
 
         var newItem = new YGL.Model.GameMode() {
             Id = (int)scrapedItem.Id,
-            Name = scrapedItem.Name ?? String.Empty,
+            Name = scrapedItem.Name ?? string.Empty,
             ItemStatus = true
         };
 
@@ -262,7 +262,7 @@ public class Scrapers {
 
         var newItem = new YGL.Model.Genre() {
             Id = (int)scrapedItem.Id,
-            Name = scrapedItem.Name ?? String.Empty,
+            Name = scrapedItem.Name ?? string.Empty,
             ItemStatus = true
         };
 
@@ -287,7 +287,7 @@ public class Scrapers {
 
         var newItem = new YGL.Model.Theme() {
             Id = (int)scrapedItem.Id,
-            Name = scrapedItem.Name ?? String.Empty,
+            Name = scrapedItem.Name ?? string.Empty,
             ItemStatus = true
         };
 
@@ -315,16 +315,16 @@ public class Scrapers {
         var newGame = new YGL.Model.Game() {
             Id = (int)scrapedItem.Id,
             Category = (int?)scrapedItem.Category,
-            Name = scrapedItem.Name ?? String.Empty,
-            Storyline = scrapedItem.Storyline ?? String.Empty,
-            Slug = scrapedItem.Slug ?? String.Empty,
-            Summary = scrapedItem.Summary ?? String.Empty,
-            ImageId = String.Empty,
+            Name = scrapedItem.Name ?? string.Empty,
+            Storyline = scrapedItem.Storyline ?? string.Empty,
+            Slug = scrapedItem.Slug ?? string.Empty,
+            Summary = scrapedItem.Summary ?? string.Empty,
+            ImageId = string.Empty,
             ItemStatus = true
         };
 
         if (scrapedItem.Cover?.Value != null)
-            newGame.ImageId = scrapedItem.Cover.Value.ImageId ?? String.Empty;
+            newGame.ImageId = scrapedItem.Cover.Value.ImageId ?? string.Empty;
 
         var foundGame = preload.Games.GetValueOrDefault(newGame.Id);
         if (foundGame is null) {
@@ -360,10 +360,8 @@ public class Scrapers {
                     ItemStatus = true
                 };
 
-                var tuple = new Tuple<int, int, bool, bool, bool, bool>(
-                    newGame.Id, newGameHasCompany.CompanyId,
-                    newGameHasCompany.IsDeveloper, newGameHasCompany.IsPorting, newGameHasCompany.IsPublisher,
-                    newGameHasCompany.IsSupporting);
+                var tuple = (newGame.Id, newGameHasCompany.CompanyId, newGameHasCompany.IsDeveloper,
+                    newGameHasCompany.IsPorting, newGameHasCompany.IsPublisher, newGameHasCompany.IsSupporting);
 
                 var foundGameHasCompany = preload.GameHasCompanies.GetValueOrDefault(tuple);
 
@@ -405,7 +403,7 @@ public class Scrapers {
                     ItemStatus = true
                 };
 
-                var tuple = new Tuple<int, int, int>(newGame.Id, newReleaseDate.PlatformId, newReleaseDate.Region);
+                var tuple = (newGame.Id, newReleaseDate.PlatformId, newReleaseDate.Region);
                 var foundReleaseDate = preload.GameAndPlatformWithReleaseDates.GetValueOrDefault(tuple);
 
                 if (foundReleaseDate is null) {
@@ -441,7 +439,7 @@ public class Scrapers {
                     ItemStatus = true
                 };
 
-                var tuple = new Tuple<int, int>(newGame.Id, newGameHasGameMode.GameModeId);
+                var tuple = (newGame.Id, newGameHasGameMode.GameModeId);
                 var foundGameMode = preload.GameHasGameModes.GetValueOrDefault(tuple);
 
                 if (foundGameMode is null) {
@@ -475,7 +473,7 @@ public class Scrapers {
                 };
 
 
-                var tuple = new Tuple<int, int>(newGame.Id, newGameHasGenre.GenreId);
+                var tuple = (newGame.Id, newGameHasGenre.GenreId);
                 var foundGenre = preload.GameHasGenres.GetValueOrDefault(tuple);
 
                 if (foundGenre is null) {
@@ -508,7 +506,7 @@ public class Scrapers {
                     ItemStatus = true
                 };
 
-                var tuple = new Tuple<int, int>(newGame.Id, newGameHasPerspective.PlayerPerspectiveId);
+                var tuple = (newGame.Id, newGameHasPerspective.PlayerPerspectiveId);
                 var foundPerspective = preload.GameHasPlayerPerspectives.GetValueOrDefault(tuple);
 
                 if (foundPerspective is null) {
@@ -542,7 +540,7 @@ public class Scrapers {
                     ItemStatus = true
                 };
 
-                var tuple = new Tuple<int, byte>(newGame.Id, newGameWithAgeCategory.Category);
+                var tuple = (newGame.Id, newGameWithAgeCategory.Category);
                 var foundAgeRating = preload.GameWithAgeCategories.GetValueOrDefault(tuple);
                 if (foundAgeRating is null) {
                     if (added.GameWithAgeCategories.ContainsKey(tuple)) continue;
@@ -576,7 +574,7 @@ public class Scrapers {
                 };
 
 
-                var tuple = new Tuple<int, int>(newGame.Id, newGameHasTheme.ThemeId);
+                var tuple = (newGame.Id, newGameHasTheme.ThemeId);
                 var foundGameHasThemes = preload.GameHasThemes.GetValueOrDefault(tuple);
                 if (foundGameHasThemes is null) {
                     if (added.GameHasThemes.ContainsKey(tuple)) continue;
@@ -606,11 +604,11 @@ public class Scrapers {
                 var newGameWithWebsite = new YGL.Model.GameWithWebsite() {
                     GameId = newGame.Id,
                     Category = (byte)scrapedWebsite.Category,
-                    Url = scrapedWebsite.Url ?? String.Empty,
+                    Url = scrapedWebsite.Url ?? string.Empty,
                     ItemStatus = true
                 };
 
-                var tuple = new Tuple<int, string>(newGame.Id, newGameWithWebsite.Url);
+                var tuple = (newGame.Id, newGameWithWebsite.Url);
                 var foundWebsite = preload.GameWithWebsites.GetValueOrDefault(tuple);
 
                 if (foundWebsite is null) {
@@ -637,18 +635,18 @@ public class Scrapers {
         //dlcs
         if (scrapedItem.Dlcs?.Ids != null) {
             foreach (int dlcId in scrapedItem.Dlcs.Ids.Select(i => (int)i)) {
-                if (_dlcs.Any(x => x.Item1 == newGame.Id && x.Item2 == dlcId))
+                if (_dlcs.Any(x => x.baseId == newGame.Id && x.dlcId == dlcId))
                     continue;
-                _dlcs.Add(new Tuple<int, int>(newGame.Id, dlcId));
+                _dlcs.Add((newGame.Id, dlcId));
             }
         }
 
         //expansions
         if (scrapedItem.Expansions?.Ids != null) {
             foreach (int expansionId in scrapedItem.Expansions.Ids.Select(i => (int)i)) {
-                if (_expansions.Any(x => x.Item1 == newGame.Id && x.Item2 == expansionId))
+                if (_expansions.Any(x => x.baseId == newGame.Id && x.expansionId == expansionId))
                     continue;
-                _expansions.Add(new Tuple<int, int>(newGame.Id, expansionId));
+                _expansions.Add((newGame.Id, expansionId));
             }
         }
     }
@@ -681,7 +679,7 @@ public class Scrapers {
                 continue;
             }
 
-            var foundDlc = preload.Dlcs.GetValueOrDefault(new Tuple<int, int>(newDlc.GameBaseId, newDlc.GameDlcId));
+            var foundDlc = preload.Dlcs.GetValueOrDefault((newDlc.GameBaseId, newDlc.GameDlcId));
 
             if (foundDlc is null) {
                 _dbConnection.Dlcs.Add(newDlc);
@@ -720,7 +718,7 @@ public class Scrapers {
             }
 
             var foundExpansion =
-                preload.Expansions.GetValueOrDefault(new Tuple<int, int>(newExpansion.GameBaseId, newExpansion.GameExpansionId));
+                preload.Expansions.GetValueOrDefault((newExpansion.GameBaseId, newExpansion.GameExpansionId));
 
             if (foundExpansion is null) {
                 _dbConnection.Expansions.Add(newExpansion);
